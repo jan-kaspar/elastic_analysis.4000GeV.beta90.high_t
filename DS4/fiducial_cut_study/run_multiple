@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function RunOne()
+{
+	cwd=`pwd`
+	
+	cd ../.. || return 1
+	./run distributions.cc -dno -no-bckg "DS4/fiducial_cut_study/$1"
+
+	cd "DS4"
+	dir="fiducial_cut_study/$1"
+	"$dir/.distributions" "45b_56t" -no-details -output-dir "$dir" &> "$dir/distributions_45b_56t.log_run" &
+	"$dir/.distributions" "45t_56b" -no-details -output-dir "$dir" &> "$dir/distributions_45t_56b.log_run" &
+
+	cd "$cwd"
+}
+
+#----------------------------------------------------------------------------------------------------
+
+RunOne "100,105" &
+RunOne "100,100" &
+RunOne "80,80" &

@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#----------------------------------------------------------------------------------------------------
+
+function RunOne()
+{
+	local ds="DS4"
+	local N_groups="$1"
+	local remainder="$2"
+
+	local dir="$ds/$N_groups-$remainder"
+
+	echo "* $dir"
+
+
+	rm -rf "$dir"
+	mkdir -p "$dir" || return 1
+	cd "$dir"
+	ln -s "../../../../$ds/distill_45b_56t.root"
+	ln -s "../../../../$ds/distill_45t_56b.root"
+	ln -s "../../../../$ds/resolution_fit_45b_56t.root"
+	ln -s "../../../../$ds/resolution_fit_45t_56b.root"
+	ln -s "../../../../$ds/unfolding_cf_45b_56t.root"
+	ln -s "../../../../$ds/unfolding_cf_45t_56b.root"
+	ln -s "../../../../$ds/eff3outof4_details_fit_old.root"
+	ln -s "../../../../$ds/alignment_fine_corrections.root"
+	ln -s "../../../../$ds/CMSZeroBiasEvents_8369"
+	ln -s "../../../../$ds/CMSZeroBiasEvents_8371"
+	ln -s "../../../../$ds/CMSZeroBiasEvents_8372"
+	
+	echo "#include \"DS4/parameters.h\"" > "parameters.h"
+	
+	cd - &> /dev/null
+	
+	cd "../.."
+	./run distributions.cc -O "-details 1 -tg-divisor $N_groups -tg-remainder $remainder" "stat_unc_test/fixed-lumi-fraction/$dir"
+	cd - &> /dev/null
+}
+
+#----------------------------------------------------------------------------------------------------
+
+N_groups=60
+
+for g in `seq 0 5`
+do
+	for i in `seq 1 10`
+	do
+		let 'r=10*g + i-1'
+		#echo $r
+		RunOne $N_groups $r
+	done
+	
+	sleep 80 # wait 2 minutes
+done

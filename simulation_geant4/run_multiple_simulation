@@ -1,0 +1,42 @@
+#!/bin/bash
+
+outputDir="simulations/flat,no_details,short"
+
+elasticGenerator="False"
+saveSimHits="False"
+events="1E4"
+seeds=`seq 1 4`
+
+#----------------------------------------------------------------------------------------------------
+
+function ProcessOne()
+{
+	# make config file
+	tag="${events}_${seed}"
+
+	echo "* $outputDir | $tag"
+
+	src="simu_template_cfg.py"
+	cat "$src" | sed "\
+			s|\$elasticGenerator|$elasticGenerator|;\
+			s|\$saveSimHits|$saveSimHits|;\
+			s|\$events|$events|;\
+			s|\$seed|$seed|;\
+			s|\$tag|$tag|;\
+		" > "$outputDir/${tag}_simu_cfg.py"
+
+	# run simulation
+	cd "$outputDir" || return
+	#export CMSSW_SEARCH_PATH=$CMSSW_SEARCH_PATH:/afs/cern.ch/work/j/jkaspar/analyses/elastic/4000GeV,beta90,high_t/simulation_geant4
+	cmsRun "${tag}_simu_cfg.py" &> "${tag}_simu.log" &
+	cd - &> /dev/null
+}
+
+#----------------------------------------------------------------------------------------------------
+
+mkdir -p "$outputDir"
+
+for seed in ${seeds[*]}
+do
+	ProcessOne
+done

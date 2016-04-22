@@ -1,0 +1,40 @@
+#!/bin/bash
+
+selections=(
+#	"N,nF:RT:th_y_low"
+#	"N,nF:RT:th_y_high"
+#	"nN,F:RT"
+	"nN,nF:RT"
+	"nN,nF:LB"
+)
+
+#----------------------------------------------------------------------------------------------------
+
+function ProcessOne()
+{
+	echo $dir
+
+	cp "dump_data.cc" "$dir"
+	cd "$dir" || return 1
+
+	echo "    compiling"
+	g++ -O3 -Wall -Wextra\
+		`root-config --libs` -lMinuit `root-config --cflags` \
+		-I"${CMSSW_BASE}/src" \
+		-I"/afs/cern.ch/cms/slc6_amd64_gcc481/external/fastjet/3.0.3/include" \
+		-L"${CMSSW_BASE}/lib/slc6_amd64_gcc481" \
+		-lTotemAnalysisTotemNtuplizer \
+		dump_data.cc -o dump_data || return 2
+
+	echo "    running"
+	./dump_data &> "dump_data.asy"
+
+	cd - &> /dev/null
+}
+
+#----------------------------------------------------------------------------------------------------
+
+for dir in ${selections[*]}
+do
+	ProcessOne
+done

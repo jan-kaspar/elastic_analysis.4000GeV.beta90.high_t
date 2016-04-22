@@ -1,0 +1,251 @@
+\input article
+\input macros
+
+\def\baseDir{/afs/cern.ch/work/j/jkaspar/analyses/elastic/4000GeV,beta90,high_t}
+\def\release{}
+
+%----------------------------------------------------------------------------------------------------
+
+\centerline{\SetFontSizesXX Elastic analysis, $\sqrt s = 8\un{TeV}$, $\be^* = 90\un{m}$, full $|t|$ range}
+\vskip2mm
+\centerline{version: {\it \number\day. \number\month. \number\year}}
+
+%----------------------------------------------------------------------------------------------------
+
+\section{Introduction}
+
+\> extension of the NPB analysis, with no $|t|$ restriction
+
+%----------------------------------------------------------------------------------------------------
+
+\section{Datasets}
+
+\> DS4 = fill from 12-13 July 2012 (fill number 2836), RPs at 9.5sigma, CMS trigger; runs:
+\>> 8369: bunches 648, 2990
+\>> 8371: bunches 648, 2990
+\>> 8372: bunches 648, 2990, 26
+
+
+%----------------------------------------------------------------------------------------------------
+\section{Data-taking conditions conditions}
+
+\> only indicative numbers here, fore more precise (time-dependent) estimates see the ``Resolution''
+section below
+
+\> beam divergence in y: directly observable 2.3 urad
+
+\> beam divergence in x
+\>> $\si(vertex) = 168\un{\mu m}$
+\>> $\si(vertex) = \si(beam size) / \sqrt 2$, $\si(\hbox{1-arm beam divergence}) = \si(beam size) / \be^*$, hence 
+	si(1-arm beam divergence) = 2.4 urad
+
+
+%----------------------------------------------------------------------------------------------------
+\section{Ntuples}
+
+\> Currently used ntuples:
+
+\>> /castor/cern.ch/totem/offline/Reco/2012/Physics/July/v\_3.11
+
+
+\> Alternative -- common CMS-TOTEM:
+
+\>>	/castor/cern.ch/totem/offline/CMSTOTEM/MergedNtuples/HighBeta/198902-8369\_8371-V00-02-00/RomanPots/ \\
+	/castor/cern.ch/totem/offline/CMSTOTEM/MergedNtuples/HighBeta/198903-8372-V00-02-00/RomanPots/"
+
+%----------------------------------------------------------------------------------------------------
+\section{Hit distributions}
+
+\> as in NPB
+
+%----------------------------------------------------------------------------------------------------
+\section{Alignment}
+
+\> as in NPB
+
+%----------------------------------------------------------------------------------------------------
+\section{Optics}
+
+\> as in NPB
+
+%----------------------------------------------------------------------------------------------------
+\section{Reconstruction formulae}
+
+\> as in NPB
+
+%----------------------------------------------------------------------------------------------------
+\section{Resolution}
+
+\> \plot{resolutions/resolutions_vs_time_per_bunch.pdf} : time dependence of resolution-related quantities, per bunch
+
+
+%----------------------------------------------------------------------------------------------------
+\section{Cuts/elastic tagging}
+
+\> as in NPB
+\> cuts 1, 2, 7, 5, 6; not 3 and 4
+
+\> All cuts applied at $5\un{\si}$ level
+\>> the ``sigma'' corresponds to the RMS of the distribution, may not include non-Gaussian tails
+
+\> \plot{background,cut_efficiency/t_distributions_n_si.pdf} : $|t|$-distribution with cuts applied at different $n_\si$ levels
+\>> few per-mille difference wrt.~the default cut at $5\un{\sigma}$
+\>> at higher $|t|$, the relative change is larger, but it corresponds to difference of 1 or 2 events (dashed line represents 1-event difference)
+
+
+%----------------------------------------------------------------------------------------------------
+\section{Background}
+
+\> expectable background
+\>> beam halo + ...
+\>> DPE, 2x SD: the two protons uncorrelated (for DPE most likely good approximation), thus collinearity cuts
+shall yield strong suppression
+
+
+\> \plot{background,cut_efficiency/cut_distributions.pdf}: distributions of cut discriminators under various cut combinations
+
+\> \plot{background,cut_efficiency/cut_dist_antidgn_cmp.pdf}: one cut is released and its discriminator distributions is plotted, for diagonal and anti-diagonal configurations
+
+\> \plot{background,cut_efficiency/t_distributions_cuts.pdf}: t-distributions under different cut combinations
+
+\> \plot{background,cut_efficiency/t_dist_antidgn_cmp.pdf}: t-distributions, with all cuts but from different diagonal and anti-diagonal configurations
+
+
+%----------------------------------------------------------------------------------------------------
+\section{Binning}
+
+\> \plot{binning/bin_size_vs_t.pdf}
+\>> at low $|t|$: bin size = a multiple of smearing sigma
+\>> at medium $|t|$: bin size to give a fixed statistical uncertainty
+\>> at high $|t|$: bin size not larger than $0.1\un{GeV^2}$
+\>> no events beyond $|t| \approx 1.9\un{GeV^2}$
+
+%----------------------------------------------------------------------------------------------------
+\section{Acceptance correction}
+
+\> as in NPB
+
+%----------------------------------------------------------------------------------------------------
+\section{Efficiency studies}
+
+% OLD
+\iffalse
+\> \em{uncorrelated single-RP inefficiency}: $U_i$
+\>> repeat elastic selection with 3 RPs of a diagonal and check the 4th RP
+
+\> \em{correlated near-far inefficiency}: $C = 2\cdot (1.5 \pm 0.5)\un{\%}$
+\>> study of events with characteristic signatures
+\>> supported by MC simulation
+
+\> \em{pile-up inefficiency}: $P$
+\>> from zero-bias data (same bunches as for analysis)
+\>> probability to find at least one (U or V) track pattern in both near and far RPs in any arm of a diagonal
+
+\> formula for inefficiency correction per diagonal:\cBlack
+$$\hbox{correction factor} = {1\over 1 - (\sum_{\rm RPs} U_i + C)} {1\over 1 - P}$$
+
+\> trigger inefficiency
+\>> zero-bias data, same bunches as in main analysis, determine:
+\>>> number of events with elastic tag
+\>>> number of events with elastic tag and RP trigger (trigger\_bits \& 1 == true)
+\>> for all datasets, all diagonals, these two numbers come out equal
+\>> source of zero-bias trigger
+\>>> DS2, DS3: TOTEM, only on selected bunches
+\>>> DS4: issued by CMS, on all 108 bunches (thus less events per bunch)
+\>> lower bound for efficiency: $\ep_{min} = \root N \of {1 - CL}$
+\>>> at CL = 95\%, $\ep > 99.5\un{\%}$
+\>> details in \summary{efficiencies.ods}
+
+\> DAQ inefficiency (= dead time)
+\>> \plot{efficiencies/daq_efficiency.pdf} : DAQ efficiency
+(= recorded / trigger events) per raw-data file
+\>> included in effective luminosity: ${\cal L}^{int} = \sum\limits_{periods} {\cal L}_i^{int} \,\ep_i^{DAQ}$
+\>> same mean DAQ efficiency if summing per run or per file
+\>> \TODO: why DS4 has efficiency of $98\un{\%}$ only? (similar for all the 3 bunches)
+
+\> summary spread-sheet: \summary{efficiencies.ods}
+
+\subsection{3-out-of-4 efficiencies}
+
+\> testing 1 RP at a time -- pot removed from tagging
+
+\> tested arm -- including the test RP
+\>> $\th_y^*$ determined from the other RP
+
+\> reference arm -- opposite to the tested RP
+\>> $\th_x^*$, $x^*$ and $\th_y^*$ determined as in standard analysis
+
+\> cuts
+\>> comparing arms: $\th_y^*$ cut
+\>> reference arm:
+\>>> $x^*$ compatible with vertex distribution
+\>>> correlation $y^N$ vs. $\th_y$
+
+
+\> plots:
+\>> \plot{efficiencies/eff3outof4_details.pdf} : efficiency per RP as function of $\th_y^*$
+\>> \plot{efficiencies/eff3outof4_2D.pdf} : efficiency per RP as function of $\th_x^*$ and $\th_y^*$
+%\plot{efficiencies/eff3outof4_cuts.pdf}
+
+\> traditional pattern: near pots efficiency about $98.5\un{\%}$, far about $97\un{\%}$
+
+\> BUT: in all RPs, in all diagonal, in all datasets: the efficiency seems dropping with increasing $\th_y^*$
+\>> the maximum difference is about $0.5\un{\%}$
+\>> the effect stays no matter what cuts (only $\De^{R-L}\th_y^*$ cut or all applicable cuts) are applied
+and no matter at what sigma level (1, 3 or 5)
+\>> the efficiency decrease seems well compensated by increase of "enough planes but no track" ratio
+
+\> the effect is well visible in 2D plots ($\th_x^*$ vs $\th_y^*$) too -- the decrease mainly follows the vertical direction
+
+\> therefore, introduced $\th_y^*$ dependent efficiency correction
+\>> the efficiency plateau is fitted with linear function for each RP: \plot{efficiencies/eff3outof4_details_fits.pdf}
+\>> the total correction is given by the sum from the 4 diagonal RPs (eventually normalised such that its value at
+$\th_y^* = 35\un{\mu rad}$ is zero -- to retain the overall normalisation)
+\>> the uncertainty of the total slope correction is about $16\un{rad^{-1}}$ which corresponds to change in efficiency
+of about $0.5\un{\%}$ between $30$ and $100\un{\mu rad}$
+
+\> in \summary{efficiencies.ods}: results of "eff3outof4"
+\>> $\th_y^*$ fits (flat plateau) at $3\un{\si}$; uncertainty to accommodate the slope of the efficiency plateau
+
+\> for DS4, checked "uncorrelated 2-out-of-4": LF,RN; LF,RF; LN,RN; LN,RF -- perfect agreement with combining 3-out-of-4 results
+
+\subsection{Pile-up}
+
+\> pile-up probability vs.~time: \plot{efficiencies/pileup.pdf}
+
+\> pile-up probability for individual bunches: \plot{efficiencies/pileup_per_bunch.pdf}
+\>> DS4: similar results for all bunches, within $\pm 0.5\un{\%}$
+
+\> standard procedure and expectable results: DS2 closer to beam, thus higher pileup ($\approx 7\un{\%}$) than DS3 and DS4
+($\approx 1\un{\%}$).
+\fi
+
+
+
+
+%----------------------------------------------------------------------------------------------------
+\section{Unfolding of resolution effects}
+
+TODO
+
+%----------------------------------------------------------------------------------------------------
+\section{Normalisation}
+
+\> as in NPB
+
+%----------------------------------------------------------------------------------------------------
+\section{Systematic uncertainties}
+
+
+
+%----------------------------------------------------------------------------------------------------
+\section{$t$ distributions}
+
+
+\> \plot{t_distributions/t_dist.pdf}: comparison of datasets and diagonals
+
+
+
+
+
+\bye
