@@ -99,7 +99,7 @@ struct AlignmentSource
 		src_c = fn;
 	}
 
-	void InitOne(const string label, AlignmentType t, const string &fn, GraphSet &gs, const string &obj)
+	int InitOne(const string label, AlignmentType t, const string &fn, GraphSet &gs, const string &obj)
 	{
 		printf(">> AlignmentSource::InitOne > alignment `%s': type %u\n", label.c_str(), t);
 
@@ -109,9 +109,9 @@ struct AlignmentSource
 
 			if (alF->IsZombie())
 			{
-				printf("\tERROR: cannot open file with alignment graphs.\n");
+				printf("\tERROR: cannot open file `%s' with alignment graphs.\n", fn.c_str());
 				delete alF;
-				return;
+				return 1;
 			}
 			
 			TGraph *g_L_F = (TGraph *) alF->Get(( string("L_F/") + obj).c_str() );
@@ -124,7 +124,7 @@ struct AlignmentSource
 			else {
 				printf("\tERROR: unable to load some alignment graphs\n");
 				delete alF;
-				return;
+				return 2;
 			}
 
 			gs.L_F = new TGraph(*g_L_F);
@@ -134,14 +134,18 @@ struct AlignmentSource
 
 			delete alF;
 		}
+
+		return 0;
 	}
 
-	void Init(const string &path_prefix = "")
+	int Init(const string &path_prefix = "")
 	{
 		printf(">> AlignmentSource::Init\n");
-		InitOne("a", type_a, path_prefix + src_a, gs_a, "a_fit");
-		InitOne("b", type_b, path_prefix + src_b, gs_b, "b_fit");
-		InitOne("c", type_c, path_prefix + src_c, gs_c, "c_fit");
+		int r = 0;
+		r += InitOne("a", type_a, path_prefix + src_a, gs_a, "a_fit");
+		r += InitOne("b", type_b, path_prefix + src_b, gs_b, "b_fit");
+		r += InitOne("c", type_c, path_prefix + src_c, gs_c, "c_fit");
+		return r;
 	}
 
 	AlignmentData Eval(double timestamp) const
@@ -547,7 +551,7 @@ struct Analysis
 	double inefficiency_shower_near;		// inefficiency due to shower in near RP
 	double inefficiency_pile_up;			// inefficiency due to pile-up, used only if use_pileup_efficiency_fits=false
 	double inefficiency_trigger;			// trigger inefficiency
-	double inefficiency_DAQ;				// DAQ inefficiency
+	double inefficiency_DAQ;				// DAQ inefficiency (dead time)
 
 	// normalisation correction to subtract background
 	double bckg_corr;

@@ -7,6 +7,7 @@
 #include "TH2.h"
 
 #include <deque>
+#include <cassert>
 
 #include "common_definitions.h"
 
@@ -354,6 +355,7 @@ std::map<unsigned int, std::vector<unsigned int> > zeroBiasEventSelection;
 void LoadZeroBiasEventSelection(const char *fn)
 {
 	FILE *sF = fopen(fn, "r");
+	assert(sF != NULL);
 	
 	while (!feof(sF))
 	{

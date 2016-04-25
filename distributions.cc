@@ -16,6 +16,7 @@
 #include "TKey.h"
 
 #include <cmath>
+#include <cassert>
 
 using namespace std;
 
@@ -319,7 +320,9 @@ int main(int argc, char **argv)
 	for (unsigned int i = 0; i < alignmentSources.size(); ++i)
 	{
 		printf("\n---------- alignment source %u ----------\n", i);
-		alignmentSources[i].Init(inputDir + "/");
+		int r = alignmentSources[i].Init(inputDir + "/");
+		if (r != 0)
+			return 1;
 	}
 	printf("\n\n");
 	
@@ -331,8 +334,11 @@ int main(int argc, char **argv)
 	binnings.push_back("ob-3-10-0.30");
 
 	// init files
-	TFile *inF = new TFile((inputDir + "/distill_" + argv[1] + ".root").c_str());
-	TFile *outF = new TFile((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
+	TFile *inF = TFile::Open((inputDir + "/distill_" + argv[1] + ".root").c_str());
+	assert(inF != NULL);
+
+	TFile *outF = TFile::Open((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
+	assert(outF != NULL);
 
 	// get input data
 	TTree *inT = (TTree *) inF->Get("distilled");
@@ -373,7 +379,11 @@ int main(int argc, char **argv)
 		string path = inputDir + "/pileup_fit_combined.root";
 		TFile *puF = TFile::Open(path.c_str());
 		if (!puF)
+		{
 			printf("ERROR: file `%s' cannot be opened.\n", path.c_str());
+			return 1;
+		}
+
 		if (diagonal == d45b_56t)
 			corrg_pileup = (TGraph *) puF->Get("45b_56t/dgn");
 		if (diagonal == d45t_56b)
@@ -702,7 +712,7 @@ int main(int argc, char **argv)
 
 	map<unsigned int, TH1D*> bh_t_Nev_before, bh_t_Nev_after_no_corr;
 	map<unsigned int, TH1D*> bh_t_before, bh_t_after_no_corr, bh_t_after;
-	map<unsigned int, TProfile*> bp_t_phi_corr, bp_t_full_corr;
+	map<unsigned int, TProfile*> bp_t_phi_corr, bp_t_full_corr, bp_t_full_acc;
 
 	for (unsigned int bi = 0; bi < binnings.size(); ++bi)
 	{
@@ -717,6 +727,7 @@ int main(int argc, char **argv)
 		bh_t_after_no_corr[bi] = new TH1D("h_t_after_no_corr", ";|t|", N_bins, bin_edges); bh_t_after_no_corr[bi]->Sumw2();
 		bp_t_phi_corr[bi] = new TProfile("p_t_phi_corr", ";t", N_bins, bin_edges, "s");
 		bp_t_full_corr[bi] = new TProfile("p_t_full_corr", ";t", N_bins, bin_edges, "s");
+		bp_t_full_acc[bi] = new TProfile("p_t_full_acc", ";t", N_bins, bin_edges);
 	}
 
 	TH2D *h_th_y_vs_th_x_before = new TH2D("h_th_y_vs_th_x_before", ";#theta_{x};#theta_{y}", 150, -150E-6, +150E-6, 150, -150E-6, +150E-6); h_th_y_vs_th_x_before->Sumw2();
@@ -1277,6 +1288,7 @@ int main(int argc, char **argv)
 
 			bp_t_phi_corr[bi]->Fill(k.t, phi_corr);
 			bp_t_full_corr[bi]->Fill(k.t, corr);
+			bp_t_full_acc[bi]->Fill(k.t, 1./corr);
 		}
 		
 		h_th_y_vs_th_x_after->Fill(k.th_x, k.th_y, div_corr);
@@ -1289,7 +1301,7 @@ int main(int argc, char **argv)
 		for (unsigned int bi = 0; bi < binnings.size(); bi++)
 			bh_t_normalized[bi]->Fill(k.t, corr * normalization);
 		
-		h_th_y_vs_th_x_normalized->Fill(k.th_x, k.th_y, div_corr * normalization * anal.L_int);
+		h_th_y_vs_th_x_normalized->Fill(k.th_x, k.th_y, div_corr * normalization);
 
 		if (detailsLevel >= 1)
 		{
@@ -1948,6 +1960,7 @@ int main(int argc, char **argv)
 		bh_t_after[bi]->Write();
 		bp_t_phi_corr[bi]->Write();
 		bp_t_full_corr[bi]->Write();
+		bp_t_full_acc[bi]->Write();
 	
 		c = new TCanvas("t cmp");
 		c->SetLogy(1);
