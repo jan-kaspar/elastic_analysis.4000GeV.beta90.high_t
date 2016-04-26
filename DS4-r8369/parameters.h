@@ -21,7 +21,7 @@ void Init_additional()
 	alignmentSources.push_back(alSrc3);
 	*/
 		
-	anal.L_int = 1.;	// TODO
+	anal.L_int = 219.136E3;
 
 	if (diagonal == d45b_56t)
 	{
