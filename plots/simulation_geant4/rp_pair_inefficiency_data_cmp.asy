@@ -34,17 +34,17 @@ for (int ai : arms.keys)
 		AddToLegend("<Monte-Carlo:");
 
 		string obj = replace("N_#.prot & F_#.prot & N_#.tr_val & !F_#.tr_val OVER N_#.prot & N_F.prot/h_th_y", "#", pairs[pi]);
-		draw(scale(1e6, 1e2), rGetObj(f, arms[ai] + "/" + obj), "eb", blue);
-		draw(scale(1e6, 1e2), rGetObj(f, arms[ai] + "/" + obj + "|pol1"), blue+dashed, "3/4 ineff.~far");
+		draw(scale(1e6, 1e2), RootGetObject(f, arms[ai] + "/" + obj), "eb", blue);
+		draw(scale(1e6, 1e2), RootGetObject(f, arms[ai] + "/" + obj + "|pol1"), blue+dashed, "3/4 ineff.~far");
 
 		string obj = replace("N_#.prot & F_#.prot & !N_#.tr_val & F_#.tr_val OVER N_#.prot & N_F.prot/h_th_y", "#", pairs[pi]);
-		draw(scale(1e6, 1e2), rGetObj(f, arms[ai] + "/" + obj), "eb", red);
-		draw(scale(1e6, 1e2), rGetObj(f, arms[ai] + "/" + obj + "|pol1"), red+dashed, "3/4 ineff.~near");
+		draw(scale(1e6, 1e2), RootGetObject(f, arms[ai] + "/" + obj), "eb", red);
+		draw(scale(1e6, 1e2), RootGetObject(f, arms[ai] + "/" + obj + "|pol1"), red+dashed, "3/4 ineff.~near");
 
 		/*
 		string obj = replace("N_#.prot & F_#.prot & !N_#.tr_val & !F_#.tr_val OVER N_#.prot & N_F.prot", "#", pairs[pi]);
-		draw(scale(1e6, 1e2), rGetObj(f, arms[ai] + "/" + obj), "eb", blue, "not near \& not far ($\equiv$ 2/4 ineff.)");
-		draw(scale(1e6, 1e2), rGetObj(f, arms[ai] + "/" + obj + "|pol1"), blue+1pt);
+		draw(scale(1e6, 1e2), RootGetObject(f, arms[ai] + "/" + obj), "eb", blue, "not near \& not far ($\equiv$ 2/4 ineff.)");
+		draw(scale(1e6, 1e2), RootGetObject(f, arms[ai] + "/" + obj + "|pol1"), blue+1pt);
 		*/
 
 		// horizontal scale
@@ -65,12 +65,12 @@ for (int ai : arms.keys)
 		string diagonal = (fp == "L_B" || fp == "R_T") ? "45b_56t" : "45t_56b";
 		string f = dataDir + "eff3outof4_details_fit.root";
 
-		rObject fit = rGetObj(f, diagonal + "/" + arms[ai] + "_N/th_y : rel|ff");
+		RootObject fit = RootGetObject(f, diagonal + "/" + arms[ai] + "_N/th_y : rel|ff");
 		real y_min = fit.rExec("Eval", x_min);
 		real y_max = fit.rExec("Eval", x_max);
 		draw((x_min, 100*(1 - y_min))--(x_max, 100*(1 - y_max)), red+1pt, "3/4 ineff.~near");
 
-		rObject fit = rGetObj(f, diagonal + "/" + arms[ai] + "_F/th_y : rel|ff");
+		RootObject fit = RootGetObject(f, diagonal + "/" + arms[ai] + "_F/th_y : rel|ff");
 		real y_min = fit.rExec("Eval", x_min);
 		real y_max = fit.rExec("Eval", x_max);
 		draw((x_min, 100*(1 - y_min))--(x_max, 100*(1 - y_max)), blue+1pt, "3/4 ineff.~far");
@@ -109,7 +109,7 @@ for (int dgi : diagonals.keys)
 	for (int rpi : RPs.keys)
 	{
 		string d = diagonals[dgi] + "/" + RPs[rpi];
-		rObject fit = rGetObj(f, d+"/th_y : rel|ff");
+		RootObject fit = RootGetObject(f, d+"/th_y : rel|ff");
 		
 		real y_min = fit.rExec("Eval", x_min);
 		real y_max = fit.rExec("Eval", x_max);

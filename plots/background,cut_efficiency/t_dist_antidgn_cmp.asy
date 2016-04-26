@@ -10,7 +10,7 @@ string topDir = "../../";
 
 string cut_str = "cuts:1,2,7,5,6";
 
-string binning = "ob-2-20-0.10";
+string binning = "ob-2-20-0.20";
 
 xSizeDef = 8cm;
 
@@ -33,7 +33,7 @@ for (int dsi : datasets.keys)
 	{
 		string f = topDir+datasets[dsi]+"/background_study/"+cut_str  + "/distributions_"+diagonals[dgni]+".root";
 		//string f = topDir+datasets[dsi]+"/distributions_"+diagonals[dgni]+".root";
-		draw(rGetObj(f, "acceptance correction/" + binning + "/h_t_before"), "vl,eb", StdPen(dgni+1), dgn_labels[dgni]);
+		draw(RootGetObject(f, "acceptance correction/" + binning + "/h_t_before"), "vl,eb", StdPen(dgni+1), dgn_labels[dgni]);
 	}
 
 	limits((0, 1e1), (1.4, 1e9), Crop);
@@ -48,7 +48,7 @@ for (int dsi : datasets.keys)
 	{
 		//string f = topDir+datasets[dsi]+"/background_study/"+cut_str  + "/distributions_"+diagonals[dgni]+".root";
 		string f = topDir+datasets[dsi]+"/distributions_"+diagonals[dgni]+".root";
-		draw(rGetObj(f, "acceptance correction/" + binning + "/h_t_after"), "vl,eb", StdPen(dgni+1), dgn_labels[dgni]);
+		draw(RootGetObject(f, "acceptance correction/" + binning + "/h_t_after"), "vl,eb", StdPen(dgni+1), dgn_labels[dgni]);
 	}
 
 	limits((0, 1e1), (1.4, 1e9), Crop);

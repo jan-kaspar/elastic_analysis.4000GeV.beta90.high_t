@@ -32,10 +32,10 @@ void DrawOne(string tag)
 		if (mi == 1) p = dashed;
 		if (mi == 2) p = longdashed;
 		
-		draw(rGetObj(f_45b, tag + "/" + models[mi] + "/g_r"), blue+p);
-		draw(rGetObj(f_45t, tag + "/" + models[mi] + "/g_r"), red+p);
+		draw(RootGetObject(f_45b, tag + "/" + models[mi] + "/g_r"), blue+p);
+		draw(RootGetObject(f_45t, tag + "/" + models[mi] + "/g_r"), red+p);
 
-		//draw(rGetObj(f_matrix, "contributions/" + tag + "/g_eff_comb1"), heavygreen+p);
+		//draw(RootGetObject(f_matrix, "contributions/" + tag + "/g_eff_comb1"), heavygreen+p);
 	}
 
 	//limits((0, y_min), (2., y_max), Crop);

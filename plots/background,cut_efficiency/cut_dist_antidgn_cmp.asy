@@ -23,7 +23,7 @@ void MakeComparison(string cut_str, string quantity, real xscale, string unit, s
 	string dir = topDir+dataset+"/background_study/"+cut_str;
 
 	for (int dgni : diagonals.keys)
-		draw(scale(xscale, 1), rGetObj(dir + "/distributions_"+diagonals[dgni]+".root", "elastic cuts/"+obj),
+		draw(scale(xscale, 1), RootGetObject(dir + "/distributions_"+diagonals[dgni]+".root", "elastic cuts/"+obj),
 			"vl", StdPen(dgni+1), dgn_labels[dgni]);
 	
 	// TODO

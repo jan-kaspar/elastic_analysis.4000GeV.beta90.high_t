@@ -23,21 +23,21 @@ cut_combinations=(
 	"1,2,7,5,6,3"
 	"1,2,7,5,6,3,4"
 
-#	"2"
-#	"2,7"
-#	"2,7,5"
-#	"2,7,5,6"
-#
-#	"1,7"
-#	"1,7,5"
-#	"1,7,5,6"
-#
-#	"1,2,5"
-#	"1,2,5,6"
-#
-#	"1,2,7,6"
-#
-#	"1,2,7,5"
+	"2"
+	"2,7"
+	"2,7,5"
+	"2,7,5,6"
+
+	"1,7"
+	"1,7,5"
+	"1,7,5,6"
+
+	"1,2,5"
+	"1,2,5,6"
+
+	"1,2,7,6"
+
+	"1,2,7,5"
 )
 
 function RunCutCombinationReconstructions()
@@ -98,4 +98,4 @@ function RunNSiReconstructions()
 	done
 }
 
-#RunNSiReconstructions
+RunNSiReconstructions

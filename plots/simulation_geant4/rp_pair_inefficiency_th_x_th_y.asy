@@ -58,7 +58,7 @@ for (int si : signatures.keys)
 		{
 			NewPad("$\th_x^*\ung{\mu rad}$", "$\th_y^*\ung{\mu rad}$", axesAbove=true);
 
-			rObject obj = rGetObj(f, arms[ai] + "/" + replace(signatures[si], "#", pairs[pi]) + "/h_th_x_th_y", error=false);
+			RootObject obj = RootGetObject(f, arms[ai] + "/" + replace(signatures[si], "#", pairs[pi]) + "/h_th_x_th_y", error=false);
 			if (obj.valid)
 				draw(scale(1e6, 1e6), obj, "p,bar");
 		}

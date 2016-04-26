@@ -56,10 +56,10 @@ for (int dsi : datasets.keys)
 		{
 			++gx;
 			NewPad("$\th_y^*\ung{\mu rad}$", "$N_{\rm ev}(\hbox{4 tracks}) / N_{\rm ev}(\hbox{3 tracks})\ung{\%}$", gx, gy);
-			draw(scale(sgn*1e6, 100), rGetObj(f, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_y dependence/h_refined_ratio.th_y"), opt, black, "only $\th_y^*$ L-R cut, $3\un{\si}$");
-			draw(scale(sgn*1e6, 100), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 1.0/th_y dependence/h_refined_ratio"), opt, red, "all cuts, $1\un{\si}$");
-			draw(scale(sgn*1e6, 100), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 5.0/th_y dependence/h_refined_ratio"), opt, heavygreen, "all cuts, $5\un{\si}$");
-			draw(scale(sgn*1e6, 100), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_y dependence/h_refined_ratio"), opt, blue+1pt, "all cuts, $3\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(f, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_y dependence/h_refined_ratio.th_y"), opt, black, "only $\th_y^*$ L-R cut, $3\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 1.0/th_y dependence/h_refined_ratio"), opt, red, "all cuts, $1\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 5.0/th_y dependence/h_refined_ratio"), opt, heavygreen, "all cuts, $5\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_y dependence/h_refined_ratio"), opt, blue+1pt, "all cuts, $3\un{\si}$");
 
 			limits((20, 95), (120, 100), Crop);
 			fLegend = BuildLegend();
@@ -75,10 +75,10 @@ for (int dsi : datasets.keys)
 		{
 			++gx;
 			NewPad("$\th_x^*\ung{\mu rad}$", "\ung{\%}", gx, gy);
-			draw(scale(sgn*1e6, 100), rGetObj(f, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x dependence/h_refined_ratio.th_x"), opt, black, "only $\th_x^*$ L-R cut, $3\un{\si}$");
-			draw(scale(sgn*1e6, 100), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 1.0/th_x dependence/h_refined_ratio"), opt, red, "all cuts, $1\un{\si}$");
-			draw(scale(sgn*1e6, 100), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 5.0/th_x dependence/h_refined_ratio"), opt, heavygreen, "all cuts, $5\un{\si}$");
-			draw(scale(sgn*1e6, 100), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x dependence/h_refined_ratio"), opt, blue+1pt, "all cuts, $3\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(f, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x dependence/h_refined_ratio.th_x"), opt, black, "only $\th_x^*$ L-R cut, $3\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 1.0/th_x dependence/h_refined_ratio"), opt, red, "all cuts, $1\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 5.0/th_x dependence/h_refined_ratio"), opt, heavygreen, "all cuts, $5\un{\si}$");
+			draw(scale(sgn*1e6, 100), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x dependence/h_refined_ratio"), opt, blue+1pt, "all cuts, $3\un{\si}$");
 
 			limits((-320, 90), (320, 100), Crop);
 			fLegend = BuildLegend();
@@ -102,7 +102,7 @@ for (int dsi : datasets.keys)
 		{
 			++gx;
 			NewPad("$\th_x^*\ung{\mu rad}$", "$\th_y^*\ung{\mu rad}$", gx, gy);
-			draw(scale(1e6, 1e6), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x, th_y dependence/h_simple_ratio"),
+			draw(scale(1e6, 1e6), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x, th_y dependence/h_simple_ratio"),
 				"p,bar", blue, "all cuts, $3\un{\si}$");
 
 			limits((-320, 20), (+320, 120), Crop);
@@ -124,7 +124,7 @@ for (int dsi : datasets.keys)
 		{
 			++gx;
 			NewPad("$\th_x^*\ung{\mu rad}$", "$\th_y^*\ung{\mu rad}$", gx, gy);
-			draw(scale(1e6, 1e6), rGetObj(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x, th_y dependence, coarse/hc_simple_ratio"),
+			draw(scale(1e6, 1e6), RootGetObject(fmc, "excluded RPs "+RPs[rpi]+"/n_si 3.0/th_x, th_y dependence, coarse/hc_simple_ratio"),
 				"p,bar", blue, "all cuts, $3\un{\si}$");
 
 			limits((-320, 20), (+320, 120), Crop);

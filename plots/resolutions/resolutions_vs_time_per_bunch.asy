@@ -45,10 +45,10 @@ for (int dgni : diagonals.keys)
 		pen p = StdPen(bi);
 		string f = topDir+dataset+"/resolution_fit_"+diagonals[dgni]+".root";
 
-		rObject data = rGetObj(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_x_vs_time");
+		RootObject data = RootGetObject(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_x_vs_time");
 		draw(swToHours*scale(1, 1e6), data, "p,eb,d0", p, mCi+1pt+p, bunches[bi]);
 
-		rObject fit = rGetObj(f, "bunch "+bunches[bi]+"/fit_x");
+		RootObject fit = RootGetObject(f, "bunch "+bunches[bi]+"/fit_x");
 		draw(shift(0,  0.0)*swToHours*scale(1, 1e6), fit, "def", p+1pt);
 	}
 		
@@ -69,10 +69,10 @@ for (int dgni : diagonals.keys)
 		pen p = StdPen(bi);
 		string f = topDir+dataset+"/resolution_fit_"+diagonals[dgni]+".root";
 
-		rObject data = rGetObj(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_y_vs_time");
+		RootObject data = RootGetObject(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_y_vs_time");
 		draw(swToHours*scale(1, 1e6), data, "p,eb,d0", p, mCi+1pt+p, bunches[bi]);
 
-		rObject fit = rGetObj(f, "bunch "+bunches[bi]+"/fit_y");
+		RootObject fit = RootGetObject(f, "bunch "+bunches[bi]+"/fit_y");
 		draw(shift(0,  0.0)*swToHours*scale(1, 1e6), fit, "def", p+1pt);
 	}
 	
@@ -98,7 +98,7 @@ for (int dgni : diagonals.keys)
 		pen p = StdPen(bi);
 		string f = topDir+dataset+"/distributions_"+diagonals[dgni]+".root";
 
-		rObject data = rGetObj(f, "time dependences/bunch "+bunches[bi]+"/gRMS_vtx_x_vs_time");
+		RootObject data = RootGetObject(f, "time dependences/bunch "+bunches[bi]+"/gRMS_vtx_x_vs_time");
 		draw(swToHours*scale(1, 1e3), data, "p,eb,d0", p, mCi+1pt+p, bunches[bi]);
 	}
 	
@@ -119,7 +119,7 @@ for (int dgni : diagonals.keys)
 		pen p = StdPen(bi);
 		string f = topDir+dataset+"/distributions_"+diagonals[dgni]+".root";
 
-		rObject data = rGetObj(f, "time dependences/bunch "+bunches[bi]+"/g_beam_div_x_vs_time");
+		RootObject data = RootGetObject(f, "time dependences/bunch "+bunches[bi]+"/g_beam_div_x_vs_time");
 		draw(swToHours*scale(1, 1e6), data, "p,eb,d0", p, mCi+1pt+p, bunches[bi]);
 	}
 	
@@ -140,7 +140,7 @@ for (int dgni : diagonals.keys)
 		pen p = StdPen(bi);
 		string f = topDir+dataset+"/distributions_"+diagonals[dgni]+".root";
 
-		rObject data = rGetObj(f, "time dependences/bunch "+bunches[bi]+"/g_sensor_res_x_vs_time");
+		RootObject data = RootGetObject(f, "time dependences/bunch "+bunches[bi]+"/g_sensor_res_x_vs_time");
 		draw(swToHours*scale(1, 1e6), data, "p,eb,d0", p, mCi+1pt+p, bunches[bi]);
 	}
 
@@ -161,7 +161,7 @@ for (int dgni : diagonals.keys)
 		pen p = StdPen(bi);
 		string f = topDir+dataset+"/resolution_fit_"+diagonals[dgni]+".root";
 
-		rObject data = rGetObj(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_x_vs_time");
+		RootObject data = RootGetObject(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_x_vs_time");
 		draw(swToHours*scale(1, 1e6)*scale(1, 0.5), data, "p,eb,d0", p, mCi+1pt+p, bunches[bi]);
 	}
 		
@@ -182,7 +182,7 @@ for (int dgni : diagonals.keys)
 		pen p = StdPen(bi);
 		string f = topDir+dataset+"/resolution_fit_"+diagonals[dgni]+".root";
 
-		rObject data = rGetObj(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_y_vs_time");
+		RootObject data = RootGetObject(f, "bunch "+bunches[bi]+"/gRMS_diffLR_th_y_vs_time");
 		draw(swToHours*scale(1, 1e6)*scale(1, 0.5), data, "p,eb,d0", p, mCi+1pt+p, bunches[bi]);
 	}
 	

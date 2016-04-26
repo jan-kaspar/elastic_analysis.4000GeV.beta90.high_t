@@ -24,7 +24,7 @@ void MakeComparison(string quantity, real xscale, string unit, string obj, real 
 	for (int ci : combinations.keys)
 	{
 		string f = topDir+dataset+"/background_study/"+combinations[ci]+"/distributions_"+diagonal+".root";
-		draw(scale(xscale, 1), rGetObj(f, "elastic cuts/"+obj), "vl", 
+		draw(scale(xscale, 1), RootGetObject(f, "elastic cuts/"+obj), "vl", 
 			comb_pens[ci], replace(combinations[ci], "_", "\_"));	
 	}
 

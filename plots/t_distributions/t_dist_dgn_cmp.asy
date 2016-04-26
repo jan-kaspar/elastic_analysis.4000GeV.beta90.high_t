@@ -32,7 +32,7 @@ for (int bi : binnings.keys)
 	scale(Linear, Log);
 	for (int dgni : diagonals.keys)
 	{
-		rObject obj = rGetObj(topDir+dataset+"/distributions_"+diagonals[dgni]+".root", "normalization/"+binnings[bi]+"/h_t_normalized");
+		RootObject obj = RootGetObject(topDir+dataset+"/distributions_"+diagonals[dgni]+".root", "normalization/"+binnings[bi]+"/h_t_normalized");
 		draw(obj, "vl,eb", StdPen(dgni+1), dgn_labels[dgni]);
 	}
 

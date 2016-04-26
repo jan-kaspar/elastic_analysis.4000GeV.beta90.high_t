@@ -329,9 +329,6 @@ int main(int argc, char **argv)
 		if (SkipBunch(run, ev.bunch_num))
 			continue;
 
-		// zero bias event?
-		bool zero_bias_event = IsZeroBias(ev.trigger_bits, ev.run_num, ev.event_num);
-
 		// apply fine alignment
 		HitData h_al = ev.h;
 		HitData hH_al = ev.hH;

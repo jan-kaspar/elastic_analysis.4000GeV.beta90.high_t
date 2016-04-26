@@ -8,13 +8,12 @@ string dgn_labels[] = { "45b -- 56t", "45t -- 56b" };
 
 string topDir = "../../";
 
-//string binning = "ob-2-20-0.10";
-string binning = "ob-3-10-0.10";
+string binning = "ob-3-10-0.30";
 
 //----------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------
 
-void PlotRatio(rObject o, rObject r, pen p)
+void PlotRatio(RootObject o, RootObject r, pen p)
 {
 	guide g;
 
@@ -39,7 +38,7 @@ void PlotRatio(rObject o, rObject r, pen p)
 
 //----------------------------------------------------------------------------------------------------
 
-void PlotResolution(rObject r)
+void PlotResolution(RootObject r)
 {
 	guide g;
 
@@ -101,7 +100,7 @@ for (int dsi : datasets.keys)
 				label += " (reference)";
 		
 			string f = topDir+dataset+"/background_study/"+combinations[ci]+"/distributions_"+diagonal+".root";
-			draw(rGetObj(f, "normalization/"+binning+"/h_t_normalized"), "eb",
+			draw(RootGetObject(f, "normalization/"+binning+"/h_t_normalized"), "eb",
 				comb_pens[ci], label);
 		}
 		
@@ -115,8 +114,8 @@ for (int dsi : datasets.keys)
 		//--------------------
 		
 		string ref_f = topDir+dataset+"/background_study/"+ref_comb+"/distributions_"+diagonal+".root";
-		rObject ref_o = rGetObj(ref_f, "normalization/"+binning+"/h_t_normalized");
-		rObject ref_o_Nev = rGetObj(ref_f, "acceptance correction/"+binning+"/h_t_Nev_after_no_corr");
+		RootObject ref_o = RootGetObject(ref_f, "normalization/"+binning+"/h_t_normalized");
+		RootObject ref_o_Nev = RootGetObject(ref_f, "acceptance correction/"+binning+"/h_t_Nev_after_no_corr");
 		
 		//--------------------
 
@@ -127,7 +126,7 @@ for (int dsi : datasets.keys)
 			//	continue;
 		
 			string f = topDir+dataset+"/background_study/"+combinations[ci]+"/distributions_"+diagonal+".root";
-			rObject o = rGetObj(f, "normalization/"+binning+"/h_t_normalized");
+			RootObject o = RootGetObject(f, "normalization/"+binning+"/h_t_normalized");
 			PlotRatio(o, ref_o, comb_pens[ci]);
 		}
 
@@ -145,7 +144,7 @@ for (int dsi : datasets.keys)
 			//	continue;
 		
 			string f = topDir+dataset+"/background_study/"+combinations[ci]+"/distributions_"+diagonal+".root";
-			rObject o = rGetObj(f, "normalization/"+binning+"/h_t_normalized");
+			RootObject o = RootGetObject(f, "normalization/"+binning+"/h_t_normalized");
 			PlotRatio(o, ref_o, comb_pens[ci]);
 		}
 		

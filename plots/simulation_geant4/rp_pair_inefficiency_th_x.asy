@@ -33,17 +33,17 @@ for (int ai : arms.keys)
 		AddToLegend("<track reconstructed in:");
 		
 		string obj_n = replace("N_#.prot & F_#.prot & N_#.tr_val & !F_#.tr_val OVER N_#.prot & N_F.prot/h_th_x", "#", pairs[pi]);
-		rObject obj = rGetObj(f, arms[ai] + "/" + obj_n, error=false);
+		RootObject obj = RootGetObject(f, arms[ai] + "/" + obj_n, error=false);
 		if (obj.valid)
 			draw(scale(1e6, 1e2), obj, "eb", black, "near \& not far ($\equiv$ 3/4 ineff.~far)");
 
 		string obj_n = replace("N_#.prot & F_#.prot & !N_#.tr_val & F_#.tr_val OVER N_#.prot & N_F.prot/h_th_x", "#", pairs[pi]);
-		rObject obj = rGetObj(f, arms[ai] + "/" + obj_n, error=false);
+		RootObject obj = RootGetObject(f, arms[ai] + "/" + obj_n, error=false);
 		if (obj.valid)
 			draw(scale(1e6, 1e2), obj, "eb", red, "not near \& far ($\equiv$ 3/4 ineff.~near)");
 
 		string obj_n = replace("N_#.prot & F_#.prot & !N_#.tr_val & !F_#.tr_val OVER N_#.prot & N_F.prot/h_th_x", "#", pairs[pi]);
-		rObject obj = rGetObj(f, arms[ai] + "/" + obj_n, error=false);
+		RootObject obj = RootGetObject(f, arms[ai] + "/" + obj_n, error=false);
 		if (obj.valid)
 			draw(scale(1e6, 1e2), obj, "eb", blue, "not near \& not far ($\equiv$ 2/4 ineff.)");
 

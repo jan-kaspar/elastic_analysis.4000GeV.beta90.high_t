@@ -26,21 +26,21 @@ for (int ai : arms.keys)
 		label(arms[ai] + ", " + pairs[pi]);
 
 		NewPad("mean number of clusters $\bar N_c$");
-		draw(rGetObj(f, dir+"/h_N"), "vl", black, "near");
-		draw(rGetObj(f, dir+"/h_F"), "vl", red, "far");
-		draw(rGetObj(f, dir+"/h_NO"), "vl", blue, "opposite near");
-		draw(rGetObj(f, dir+"/h_FO"), "vl", heavygreen, "opposite far");
+		draw(RootGetObject(f, dir+"/h_N"), "vl", black, "near");
+		draw(RootGetObject(f, dir+"/h_F"), "vl", red, "far");
+		draw(RootGetObject(f, dir+"/h_NO"), "vl", blue, "opposite near");
+		draw(RootGetObject(f, dir+"/h_FO"), "vl", heavygreen, "opposite far");
 		limits((0, 0), (30, 1000), Crop);
 		AttachLegend();
 
 		NewPad("far: $\bar N_c$", "near: $\bar N_c$", axesAbove=true);
-		draw(rGetObj(f, dir+"/h2_N_F"));
+		draw(RootGetObject(f, dir+"/h2_N_F"));
 
 		NewPad("far oppos.: $\bar N_c$", "near: $\bar N_c$", axesAbove=true);
-		draw(rGetObj(f, dir+"/h2_N_FO"));
+		draw(RootGetObject(f, dir+"/h2_N_FO"));
 
 		NewPad("far oppos.: $\bar N_c$", "far: $\bar N_c$", axesAbove=true);
-		draw(rGetObj(f, dir+"/h2_F_FO"));
+		draw(RootGetObject(f, dir+"/h2_F_FO"));
 		draw((0, 0)--(30, 30), black+1pt);
 	}
 }

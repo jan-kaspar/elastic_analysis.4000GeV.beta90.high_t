@@ -19,7 +19,7 @@ pen p_unc_anal = red;
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawUncertaintyHist(real yScale=100, rObject o, pen p=black)
+void DrawUncertaintyHist(real yScale=100, RootObject o, pen p=black)
 {
 	int N = o.iExec("GetNbinsX");
 	for (int bi = 1; bi <= N; ++bi)
@@ -44,7 +44,7 @@ void DrawUncertaintyHist(real yScale=100, rObject o, pen p=black)
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawBandGraph(real yScale=100, rObject o, pen p=lightblue)
+void DrawBandGraph(real yScale=100, RootObject o, pen p=lightblue)
 {
 	guide g_u, g_b;
 	
@@ -70,7 +70,7 @@ void DrawBandGraph(real yScale=100, rObject o, pen p=lightblue)
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawBandAroundFit(rObject of, rObject ou, pen p=lightblue)
+void DrawBandAroundFit(RootObject of, RootObject ou, pen p=lightblue)
 {
 	guide g_u, g_b;
 	
@@ -97,10 +97,10 @@ void DrawBandAroundFit(rObject of, rObject ou, pen p=lightblue)
 //----------------------------------------------------------------------------------------------------
 
 // TODO: replace the temp objects
-rObject o_dsdt = rGetObj(topDir+"DS-merged/merged.root", binning+"/"+dataset+"/combined/h_dsdt");
-rObject o_unc_anal = rGetObj(topDir+dataset+"/systematics_matrix.root", "matrices/all-temp-anal/combined/g_envelope");
-rObject o_unc_full = rGetObj(topDir+dataset+"/systematics_matrix.root", "matrices/all-temp/combined/g_envelope");
-rObject o_fit = rGetObj(topDir+"models/exp3-intf-exp1.root", "g_dsdt");
+RootObject o_dsdt = RootGetObject(topDir+"DS-merged/merged.root", binning+"/"+dataset+"/combined/h_dsdt");
+RootObject o_unc_anal = RootGetObject(topDir+dataset+"/systematics_matrix.root", "matrices/all-temp-anal/combined/g_envelope");
+RootObject o_unc_full = RootGetObject(topDir+dataset+"/systematics_matrix.root", "matrices/all-temp/combined/g_envelope");
+RootObject o_fit = RootGetObject(topDir+"models/exp3-intf-exp1.root", "g_dsdt");
 
 //----------------------------------------------------------------------------------------------------
 

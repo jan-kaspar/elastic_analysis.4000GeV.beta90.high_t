@@ -24,7 +24,7 @@ for (int bi : binnings.keys)
 	
 	for (int di : datasets.keys)
 	{
-		draw(rGetObj(topDir+"DS-merged/merged.root", binnings[bi]+"/"+datasets[di]+"/combined/h_dsdt" ),
+		draw(RootGetObject(topDir+"DS-merged/merged.root", binnings[bi]+"/"+datasets[di]+"/combined/h_dsdt" ),
 			"eb", StdPen(di + 1), dataset_labels[di]);
 	}
 	

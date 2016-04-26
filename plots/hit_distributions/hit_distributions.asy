@@ -45,11 +45,11 @@ for (int ri : rps.keys)
 
 	//TH2_z_max = log10(200);
 	
-	draw(rGetObj(file_45b, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "o", lightblue);
-	draw(rGetObj(file_45t, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "o", lightblue);
+	draw(RootGetObject(file_45b, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "o", lightblue);
+	draw(RootGetObject(file_45t, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "o", lightblue);
 	
-	draw(rGetObj(file_45b, "hit distributions/horizontal, aligned, after selection/h_y_"+rps[ri]+"H_vs_x_"+rps[ri]+"H_al_sel"), "o", red);
-	draw(rGetObj(file_45t, "hit distributions/horizontal, aligned, after selection/h_y_"+rps[ri]+"H_vs_x_"+rps[ri]+"H_al_sel"), "o", heavygreen);
+	draw(RootGetObject(file_45b, "hit distributions/horizontal, aligned, after selection/h_y_"+rps[ri]+"H_vs_x_"+rps[ri]+"H_al_sel"), "o", red);
+	draw(RootGetObject(file_45t, "hit distributions/horizontal, aligned, after selection/h_y_"+rps[ri]+"H_vs_x_"+rps[ri]+"H_al_sel"), "o", heavygreen);
 
 	draw(shift(0, -sh_top[ri])*det_shape);
 	draw(shift(0, -sh_bot[ri])*scale(1, -1)*det_shape);
@@ -86,8 +86,8 @@ for (int ri : rps.keys)
 
 	//TH2_z_max = log10(200);
 	
-	draw(rGetObj(file_45b, "hit distributions/vertical, aligned, before selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_nosel"), "p,bar");
-	draw(rGetObj(file_45t, "hit distributions/vertical, aligned, before selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_nosel"), "p");
+	draw(RootGetObject(file_45b, "hit distributions/vertical, aligned, before selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_nosel"), "p,bar");
+	draw(RootGetObject(file_45t, "hit distributions/vertical, aligned, before selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_nosel"), "p");
 	
 	draw(shift(0, -sh_top[ri])*det_shape);
 	draw(shift(0, -sh_bot[ri])*scale(1, -1)*det_shape);
@@ -110,8 +110,8 @@ for (int ri : rps.keys)
 
 	//TH2_z_max = log10(200);
 	
-	draw(rGetObj(file_45b, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "p,bar");
-	draw(rGetObj(file_45t, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "p");
+	draw(RootGetObject(file_45b, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "p,bar");
+	draw(RootGetObject(file_45t, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "p");
 	
 	draw(shift(0, -sh_top[ri])*det_shape);
 	draw(shift(0, -sh_bot[ri])*scale(1, -1)*det_shape);

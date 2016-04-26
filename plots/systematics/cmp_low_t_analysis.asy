@@ -20,21 +20,21 @@ drawGridDef = true;
 //----------------------------------------------------------------------------------------------------
 
 NewPad();
-//draw(rGetObj(f_mlt, "alignment-shy/contribution: de_th_y"), "eb", red);
-draw(rGetObj(f_lt, "de_th_x/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "alig-sh-thx/exp3-intf-exp1/g_r"), blue);
+//draw(RootGetObject(f_mlt, "alignment-shy/contribution: de_th_y"), "eb", red);
+draw(RootGetObject(f_lt, "de_th_x/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "alig-sh-thx/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("alig-sh-thx");
 
 NewPad();
-draw(rGetObj(f_lt, "de_th_y/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "alig-sh-thy/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "de_th_y/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "alig-sh-thy/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("alig-sh-thy");
 
 NewPad();
-draw(rGetObj(f_lt, "tilt/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "tilt-thx-thy/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "tilt/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "tilt-thx-thy/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("tilt-thx-thy");
 
@@ -43,14 +43,14 @@ AttachLegend("tilt-thx-thy");
 NewRow();
 
 NewPad();
-draw(rGetObj(f_lt, "scale_mode1/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "opt-m1/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "scale_mode1/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "opt-m1/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("opt-m1");
 
 NewPad();
-draw(rGetObj(f_lt, "scale_mode2/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "opt-m2/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "scale_mode2/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "opt-m2/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("opt-m2");
 
@@ -61,20 +61,20 @@ y_min = 0.995; y_max = 1.005;
 yTicksDef = RightTicks(0.001, 0.0005);
 
 NewPad();
-draw(rGetObj(f_lt, "de_si_th_y/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "acc-corr-sigma-unc/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "de_si_th_y/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "acc-corr-sigma-unc/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("beam divergence: RMS uncertainty");
 
 NewPad();
-draw(rGetObj(f_lt, "sm_asym/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "acc-corr-sigma-asym/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "sm_asym/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "acc-corr-sigma-asym/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("beam divergence: left-right assymetry");
 
 NewPad();
-draw(rGetObj(f_lt, "sm_non_gauss/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "acc-corr-non-gauss/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "sm_non_gauss/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "acc-corr-non-gauss/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("beam divergence: non-Gaussianity");
 
@@ -82,8 +82,8 @@ AttachLegend("beam divergence: non-Gaussianity");
 NewRow();
 
 NewPad();
-draw(rGetObj(f_lt, "eff_slp/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "eff-slp/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "eff_slp/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "eff-slp/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("efficiency: slope");
 
@@ -91,8 +91,8 @@ AttachLegend("efficiency: slope");
 NewRow();
 
 NewPad();
-draw(rGetObj(f_lt, "de_p/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "beam-mom/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "de_p/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "beam-mom/exp3-intf-exp1/g_r"), blue);
 limits((0, y_min), (0.4, y_max), Crop);
 AttachLegend("beam-mom");
 
@@ -108,8 +108,8 @@ NewRow();
 yTicksDef = RightTicks(0.01, 0.002);
 
 NewPad();
-draw(rGetObj(f_lt, "norm/h_eff_syst"), "eb", red);
-draw(rGetObj(f_ht, "norm/exp3-intf-exp1/g_r"), blue);
+draw(RootGetObject(f_lt, "norm/h_eff_syst"), "eb", red);
+draw(RootGetObject(f_ht, "norm/exp3-intf-exp1/g_r"), blue);
 limits((0, 1.), (0.4, 1.05), Crop);
 currentpad.yTicks = RightTicks();
 AttachLegend("norm");

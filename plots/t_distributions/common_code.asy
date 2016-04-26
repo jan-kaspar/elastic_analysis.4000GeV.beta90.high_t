@@ -19,7 +19,7 @@ string ref_str = MakeRefStr("");
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawRelDiff(transform t = identity(), rObject o, pen p, marker m = mCi+2pt+black, string label="")
+void DrawRelDiff(transform t = identity(), RootObject o, pen p, marker m = mCi+2pt+black, string label="")
 {
 	if (o.InheritsFrom("TH1"))
 	{
@@ -103,7 +103,7 @@ void DrawRelDiff(transform t = identity(), rObject o, pen p, marker m = mCi+2pt+
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawRelDiffWithCorrection(transform t = identity(), rObject o, rObject o_c, real fc, pen p, string label="",
+void DrawRelDiffWithCorrection(transform t = identity(), RootObject o, RootObject o_c, real fc, pen p, string label="",
 	bool arrow=false)
 {
 	if (o.InheritsFrom("TH1") && o_c.InheritsFrom("TH1"))
@@ -197,7 +197,7 @@ void DrawRelDiffWithCorrection(transform t = identity(), rObject o, rObject o_c,
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawRelDiffWithCorrectionArray(transform t = identity(), rObject o, real corr_a[], pen p, string label="",
+void DrawRelDiffWithCorrectionArray(transform t = identity(), RootObject o, real corr_a[], pen p, string label="",
 	bool arrow=false)
 {
 	if (o.InheritsFrom("TH1"))
@@ -241,7 +241,7 @@ void DrawRelDiffWithCorrectionArray(transform t = identity(), rObject o, real co
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawRelDiffWithBand(transform t = identity(), rObject o, rObject o_u, real unc_scale = 1., pen p, string label)
+void DrawRelDiffWithBand(transform t = identity(), RootObject o, RootObject o_u, real unc_scale = 1., pen p, string label)
 {
 	if (o.InheritsFrom("TH1"))
 	{
@@ -290,7 +290,7 @@ void DrawRelDiffWithBand(transform t = identity(), rObject o, rObject o_u, real 
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawRelDiffBand(transform t = identity(), rObject o, rObject o_u,
+void DrawRelDiffBand(transform t = identity(), RootObject o, RootObject o_u,
 	real x_max = +inf,
 	real unc_rel_const = 0., real unc_scale = 1.,
 	pen p, string label)

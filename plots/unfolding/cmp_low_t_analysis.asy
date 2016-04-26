@@ -23,11 +23,11 @@ for (int dgi : diagonals.keys)
 
 	string f_old = topDir_old + dataset + "/unfolding_"+diagonals[dgi]+".root";
 	//string ff = topDir_old + dataset + "/unfolding_fit_"+diagonals[dgi]+".root";
-	draw(rGetObj(f_old, "cf,eb/exp3/corr_final"), "d0,eb", StdPen(dgi));
+	draw(RootGetObject(f_old, "cf,eb/exp3/corr_final"), "d0,eb", StdPen(dgi));
 	AddToLegend("low-$|t|$ analysis", mPl+5pt+StdPen(dgi));
 	
 	string f_this = topDir + dataset + "/unfolding_cf_"+diagonals[dgi]+".root";
-	draw(rGetObj(f_this, "ob-1-30-0.10/exp3-intf-exp1/+0,+0/iteration 1/g_corr"), "l", StdPen(dgi), "this analysis");
+	draw(RootGetObject(f_this, "ob-1-30-0.10/exp3-intf-exp1/+0,+0/iteration 1/g_corr"), "l", StdPen(dgi), "this analysis");
 }
 
 limits((0, 0.97), (0.2, 1.01), Crop);

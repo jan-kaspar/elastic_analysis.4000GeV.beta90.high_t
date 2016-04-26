@@ -25,11 +25,11 @@ drawGridDef = true;
 
 void DrawOneSet(string desc, pen p, string label)
 {
-	rObject obj = rGetObj(f, desc, error=false);
+	RootObject obj = RootGetObject(f, desc, error=false);
 	if (obj.valid)
 	{
 		draw(scale(1e6, 1e2), obj, "eb", p, label);
-		draw(scale(1e6, 1e2), rGetObj(f, desc + "|pol1"), p+1pt);
+		draw(scale(1e6, 1e2), RootGetObject(f, desc + "|pol1"), p+1pt);
 	}
 }
 

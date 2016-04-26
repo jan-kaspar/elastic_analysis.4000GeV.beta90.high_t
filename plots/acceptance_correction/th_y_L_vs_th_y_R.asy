@@ -33,7 +33,7 @@ for (int di : datasets.keys)
 		scale(Linear, Linear, Log);
 		TH2_x_min = TH2_y_min = min(s*15e-6, s*45e-6);
 		TH2_x_max = TH2_y_max = max(s*15e-6, s*45e-6);
-		draw(scale(s*1e6, s*1e6), rGetObj(topDir+datasets[di]+"/distributions_"+diagonals[dgni]+".root", "selected - angles/h_th_y_L_vs_th_y_R"), "p,bar");
+		draw(scale(s*1e6, s*1e6), RootGetObject(topDir+datasets[di]+"/distributions_"+diagonals[dgni]+".root", "selected - angles/h_th_y_L_vs_th_y_R"), "p,bar");
 		limits((25, 25), (45, 45), Crop);
 
 		for (real x = 26; x <= 45; x += 2)

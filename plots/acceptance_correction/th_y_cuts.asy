@@ -19,7 +19,7 @@ for (int dsi : datasets.keys)
 		string f = topDir+datasets[dsi]+"/distributions_"+diagonals[dgni]+".root";
 
 		// get th_y cuts
-		rObject obj = rGetObj(f, "selected - angles/g_th_y_cuts");
+		RootObject obj = RootGetObject(f, "selected - angles/g_th_y_cuts");
 		real x[] = {0};
 		real y[] = {0};
 		obj.vExec("GetPoint", 0, x, y); real th_y_lcut_L = y[0]*1e6; 
@@ -31,22 +31,22 @@ for (int dsi : datasets.keys)
 		label(replace("\vbox{\SetFontSizesXX\hbox{dataset: "+datasets[dsi]+"}\hbox{diagonal: "+dgn_labels[dgni]+"}}", "_", "\_"));
 
 		NewPad("$\th_y^*\ung{\mu rad}$");
-		draw(scale(x_scale[dgni], 1), rGetObj(f, "selected - angles/h_th_y_L"), "vl,eb", blue, "left arm");
-		draw(scale(x_scale[dgni], 1), rGetObj(f, "selected - angles/h_th_y_R"), "vl,eb", red, "right arm");
+		draw(scale(x_scale[dgni], 1), RootGetObject(f, "selected - angles/h_th_y_L"), "vl,eb", blue, "left arm");
+		draw(scale(x_scale[dgni], 1), RootGetObject(f, "selected - angles/h_th_y_R"), "vl,eb", red, "right arm");
 		limits((0, 0), (120, y_lim[dsi]), Crop);
 		AttachLegend();
 
 		NewPad("$\th_y^*\ung{\mu rad}$", xTicks=LeftTicks(2., 1.));
-		draw(scale(x_scale[dgni], 1), rGetObj(f, "selected - angles/h_th_y_L"), "vl,eb", blue, "left arm");
-		draw(scale(x_scale[dgni], 1), rGetObj(f, "selected - angles/h_th_y_R"), "vl,eb", red, "right arm");
+		draw(scale(x_scale[dgni], 1), RootGetObject(f, "selected - angles/h_th_y_L"), "vl,eb", blue, "left arm");
+		draw(scale(x_scale[dgni], 1), RootGetObject(f, "selected - angles/h_th_y_R"), "vl,eb", red, "right arm");
 		limits((y_edge[dsi]-2, 0), (y_edge[dsi]+13, y_lim[dsi]), Crop);
 		yaxis(XEquals(th_y_lcut_L, false), dashed+blue);
 		yaxis(XEquals(th_y_lcut_R, false), dashed+red);
 		AttachLegend(SE, SE);
 
 		NewPad("$\th_y^*\ung{\mu rad}$", xTicks=LeftTicks(5., 1.));
-		draw(scale(x_scale[dgni], 1), rGetObj(f, "selected - angles/h_th_y_L"), "vl,eb", blue, "left arm");
-		draw(scale(x_scale[dgni], 1), rGetObj(f, "selected - angles/h_th_y_R"), "vl,eb", red, "right arm");
+		draw(scale(x_scale[dgni], 1), RootGetObject(f, "selected - angles/h_th_y_L"), "vl,eb", blue, "left arm");
+		draw(scale(x_scale[dgni], 1), RootGetObject(f, "selected - angles/h_th_y_R"), "vl,eb", red, "right arm");
 		limits((95, 0), (115, y_lim[dsi]/12), Crop);
 		yaxis(XEquals(th_y_hcut_L, false), dashed+blue);
 		yaxis(XEquals(th_y_hcut_R, false), dashed+red);

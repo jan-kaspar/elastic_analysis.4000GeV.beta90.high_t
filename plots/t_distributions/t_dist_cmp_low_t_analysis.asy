@@ -25,8 +25,8 @@ for (int dsi : datasets.keys)
 
 	for (int dgni : dgns.keys)
 	{
-		rObject o_this = rGetObj("../../DS-merged/merged.root", "ub/"+datasets[dsi]+"/"+dgns[dgni]+"/h_dsdt");
-		rObject o_old = rGetObj("../../../4000GeV,beta90/DS-merged/merged.root", "ub/DS4-sc/"+dgns[dgni]+"/h_dsdt");
+		RootObject o_this = RootGetObject("../../DS-merged/merged.root", "ub/"+datasets[dsi]+"/"+dgns[dgni]+"/h_dsdt");
+		RootObject o_old = RootGetObject("../../../4000GeV,beta90/DS-merged/merged.root", "ub/DS4-sc/"+dgns[dgni]+"/h_dsdt");
 	
 		NewPad("$|t|\ung{GeV^2}$", "${\d\si/\d t - \hbox{ref}\over\hbox{ref}}\ ,\quad\hbox{ref} = "+ref_str+"$");
 		DrawRelDiff(o_this, blue, "this analysis, " + datasets[dsi]);

@@ -21,7 +21,7 @@ for (int di : datasets.keys)
 		NewPad("$\ph$", "$\th^*\ung{\mu rad}$");
 		TH2_zLabel = "events per bin";
 		scale(Linear, Linear, Log);
-		draw(scale(1, 1e6), rGetObj(topDir+datasets[di]+"/distributions_"+diagonals[dgni]+".root", "acceptance correction/h_th_vs_phi_after"), "p,bar");
+		draw(scale(1, 1e6), RootGetObject(topDir+datasets[di]+"/distributions_"+diagonals[dgni]+".root", "acceptance correction/h_th_vs_phi_after"), "p,bar");
 		//ylimits(30, 320, Crop);
 		AttachLegend(replace(datasets[di]+", "+dgn_labels[dgni], "_", "\_"), N, N);
 	}

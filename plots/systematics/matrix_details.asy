@@ -16,11 +16,11 @@ void DrawOne(string tag)
 {
 	NewPad();
 
-	draw(rGetObj(f_matrix, "contributions/" + tag + "/g_eff_45b"), red);
-	draw(rGetObj(f_matrix, "contributions/" + tag + "/g_eff_45t"), blue);
-	draw(rGetObj(f_matrix, "contributions/" + tag + "/g_eff_comb1"), heavygreen+1pt);
+	draw(RootGetObject(f_matrix, "contributions/" + tag + "/g_eff_45b"), red);
+	draw(RootGetObject(f_matrix, "contributions/" + tag + "/g_eff_45t"), blue);
+	draw(RootGetObject(f_matrix, "contributions/" + tag + "/g_eff_comb1"), heavygreen+1pt);
 
-	rObject obj = rGetObj(f_matrix, "contributions/" + tag + "/g_eff_comb2", error=false);
+	RootObject obj = RootGetObject(f_matrix, "contributions/" + tag + "/g_eff_comb2", error=false);
 	if (obj.valid)
 		draw(obj, magenta+1pt);
 

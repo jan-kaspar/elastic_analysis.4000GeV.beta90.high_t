@@ -31,13 +31,13 @@ void DrawOne(string fits[])
 			currentpad.xTicks = LeftTicks(0.2, 0.1);
 			
 			string fn = topDir + datasets[dsi] + "/unfolding_cf_" + diagonals[dgni] + ".root";
-			draw(rGetObj(fn, binning + "/" + fits[0] + "/+0,+0/" + iteration + "/input_corr"), "eb");
+			draw(RootGetObject(fn, binning + "/" + fits[0] + "/+0,+0/" + iteration + "/input_corr"), "eb");
 	
 			for (int fi : fits.keys)
 			{
 				write("* " + fits[fi]);
 
-				rObject obj = rGetObj(fn, binning + "/" + fits[fi] + "/+0,+0/" + iteration + "/ff", error=false);
+				RootObject obj = RootGetObject(fn, binning + "/" + fits[fi] + "/+0,+0/" + iteration + "/ff", error=false);
 				if (!obj.valid)
 					continue;
 	

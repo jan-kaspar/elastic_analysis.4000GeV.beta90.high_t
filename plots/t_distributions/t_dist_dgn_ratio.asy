@@ -13,7 +13,7 @@ string binnings[] = {
 
 //----------------------------------------------------------------------------------------------------
 
-void PlotRatio(rObject num, rObject den, pen p = black, string label = "")
+void PlotRatio(RootObject num, RootObject den, pen p = black, string label = "")
 {
 	int bins = num.iExec("GetNbinsX");
 
@@ -44,7 +44,7 @@ void PlotRatio(rObject num, rObject den, pen p = black, string label = "")
 
 //----------------------------------------------------------------------------------------------------
 
-void PlotPulls(rObject num, rObject den, pen pe = black, string label = "")
+void PlotPulls(RootObject num, RootObject den, pen pe = black, string label = "")
 {
 	int bins = num.iExec("GetNbinsX");
 
@@ -87,8 +87,8 @@ for (int dsi : datasets.keys)
 	
 	for (int bi : binnings.keys)
 	{
-		rObject o_45b = rGetObj(topDir+datasets[dsi]+"/distributions_45b_56t.root", "normalization/"+binnings[bi]+"/h_t_normalized");
-		rObject o_45t = rGetObj(topDir+datasets[dsi]+"/distributions_45t_56b.root", "normalization/"+binnings[bi]+"/h_t_normalized");
+		RootObject o_45b = RootGetObject(topDir+datasets[dsi]+"/distributions_45b_56t.root", "normalization/"+binnings[bi]+"/h_t_normalized");
+		RootObject o_45t = RootGetObject(topDir+datasets[dsi]+"/distributions_45t_56b.root", "normalization/"+binnings[bi]+"/h_t_normalized");
 
 		PlotRatio(o_45b, o_45t, StdPen(bi+1), binnings[bi]);
 	}
@@ -107,8 +107,8 @@ for (int dsi : datasets.keys)
 	
 	for (int bi : binnings.keys)
 	{
-		rObject o_45b = rGetObj(topDir+datasets[dsi]+"/distributions_45b_56t.root", "normalization/"+binnings[bi]+"/h_t_normalized");
-		rObject o_45t = rGetObj(topDir+datasets[dsi]+"/distributions_45t_56b.root", "normalization/"+binnings[bi]+"/h_t_normalized");
+		RootObject o_45b = RootGetObject(topDir+datasets[dsi]+"/distributions_45b_56t.root", "normalization/"+binnings[bi]+"/h_t_normalized");
+		RootObject o_45t = RootGetObject(topDir+datasets[dsi]+"/distributions_45t_56b.root", "normalization/"+binnings[bi]+"/h_t_normalized");
 
 		PlotRatio(o_45b, o_45t, StdPen(bi+1), binnings[bi]);
 	}
@@ -132,8 +132,8 @@ for (int dsi : datasets.keys)
 	
 	for (int bi : binnings.keys)
 	{
-		rObject o_45b = rGetObj(topDir+datasets[dsi]+"/distributions_45b_56t.root", "normalization/"+binnings[bi]+"/h_t_normalized");
-		rObject o_45t = rGetObj(topDir+datasets[dsi]+"/distributions_45t_56b.root", "normalization/"+binnings[bi]+"/h_t_normalized");
+		RootObject o_45b = RootGetObject(topDir+datasets[dsi]+"/distributions_45b_56t.root", "normalization/"+binnings[bi]+"/h_t_normalized");
+		RootObject o_45t = RootGetObject(topDir+datasets[dsi]+"/distributions_45t_56b.root", "normalization/"+binnings[bi]+"/h_t_normalized");
 
 		PlotPulls(o_45b, o_45t, StdPen(bi+1), binnings[bi]);
 	}
