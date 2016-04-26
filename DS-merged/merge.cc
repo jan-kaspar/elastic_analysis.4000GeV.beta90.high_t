@@ -21,6 +21,9 @@ struct shist
 
 TH1D* Merge(const vector<shist> &hists)
 {
+	if (hists.empty())
+		return NULL;
+
 	TH1D *m = new TH1D(*hists[0].hist);
 	m->SetName("h_dsdt");
 
@@ -66,11 +69,13 @@ int main()
 	vector<Entry> entries;
 	entries.push_back(Entry("DS4", 1., "DS4", false));
 	
-	entries.push_back(Entry("DS4", 1./1.17596, "DS4-sc", true));
+	entries.push_back(Entry("DS4", 1./1.17596, "DS4-sc", false));
 	
+	/*
 	entries.push_back(Entry("DS4-b26", 1., "DS4-b26", true));
 	entries.push_back(Entry("DS4-b2990", 1., "DS4-b2990", true));
 	entries.push_back(Entry("DS4-b648", 1., "DS4-b648", true));
+	*/
 	
 	vector<string> diagonals;
 	diagonals.push_back("45b_56t");
@@ -141,7 +146,9 @@ int main()
 
 			// save histogram merged from all inputs of a dataset
 			gDirectory = datasetDir->mkdir("combined");
-			Merge(ds_list)->Write();
+			TH1D *h_m = Merge(ds_list);
+			if (h_m)
+				h_m->Write();
 		}
 
 		// save merged histograms
@@ -150,11 +157,15 @@ int main()
 		for (map<string, vector<shist> >::iterator it = full_map.begin(); it != full_map.end(); ++it)
 		{
 			gDirectory = mergedDir->mkdir(it->first.c_str());
-			Merge(it->second)->Write();
+			TH1D *h_m = Merge(it->second);
+			if (h_m)
+				h_m->Write();
 		}
 		
 		gDirectory = mergedDir->mkdir("combined");
-		Merge(full_list)->Write();
+		TH1D *h_m = Merge(full_list);
+		if (h_m)
+			h_m->Write();
 	}
 
 	delete f_out;

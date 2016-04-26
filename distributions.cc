@@ -611,15 +611,17 @@ int main(int argc, char **argv)
 	TH2D *h_th_y_L_vs_th_y_R = new TH2D("h_th_y_L_vs_th_y_R", ";#theta_{y}^{R};#theta_{y}^{L}", 300, -150E-6, +150E-6, 300, -150E-6, +150E-6);
 	TGraph *g_th_y_L_vs_th_y_R = new TGraph(); g_th_y_L_vs_th_y_R->SetName("g_th_y_L_vs_th_y_R"); g_th_y_L_vs_th_y_R->SetTitle(";#theta_{y}^{R};#theta_{y}^{L}");
 	
-	TH1D *h_th_x_raw = new TH1D("h_th_x_raw", ";#theta_{x}", 200, -200E-6, +200E-6);
-	TH1D *h_th_y_raw = new TH1D("h_th_y_raw", ";#theta_{y}", 960, -120E-6, +120E-6);
-	TH1D *h_th_y_raw_flipped = new TH1D("h_th_y_raw_flipped", ";#theta_{y}", 960, -120E-6, +120E-6);
+	TH1D *h_th_x = new TH1D("h_th_x", ";#theta_{x}", 600, -300E-6, +300E-6);
+	TH1D *h_th_x_L = new TH1D("h_th_x_L", ";#theta_{x}^{L}", 600, -300E-6, +300E-6);
+	TH1D *h_th_x_R = new TH1D("h_th_x_R", ";#theta_{x}^{R}", 600, -300E-6, +300E-6);
 	
-	TH1D *h_th_x_L = new TH1D("h_th_x_L", ";#theta_{x}^{L}", 200, -200E-6, +200E-6); h_th_x_L->SetLineColor(4);
-	TH1D *h_th_x_R = new TH1D("h_th_x_R", ";#theta_{x}^{R}", 200, -200E-6, +200E-6); h_th_x_R->SetLineColor(2);
-	
-	TH1D *h_th_y_L = new TH1D("h_th_y_L", ";#theta_{y}^{L}", 960, -120E-6, +120E-6); h_th_y_L->SetLineColor(4);
-	TH1D *h_th_y_R = new TH1D("h_th_y_R", ";#theta_{y}^{R}", 960, -120E-6, +120E-6); h_th_y_R->SetLineColor(2);
+	TH1D *h_th_y = new TH1D("h_th_y", ";#theta_{y}", 960, -120E-6, +120E-6);
+	TH1D *h_th_y_L = new TH1D("h_th_y_L", ";#theta_{y}^{L}", 960, -120E-6, +120E-6);
+	TH1D *h_th_y_R = new TH1D("h_th_y_R", ";#theta_{y}^{R}", 960, -120E-6, +120E-6);
+
+	TH1D *h_th = new TH1D("h_th", ";#theta", 300, 0E-6, +300E-6);
+	TH1D *h_th_L = new TH1D("h_th_L", ";#theta^{L}", 300, 0E-6, +300E-6);
+	TH1D *h_th_R = new TH1D("h_th_R", ";#theta^{R}", 300, 0E-6, +300E-6);
 
 	// book alternative angular histograms
 	TH1D *h_ta_th_x = new TH1D("h_ta_th_x", ";#tau_{x} - #theta_{x}", 100, 0., 0.);
@@ -1143,15 +1145,20 @@ int main(int argc, char **argv)
 		if (detailsLevel >= 2)
 			g_th_y_L_vs_th_y_R->SetPoint(g_th_y_L_vs_th_y_R->GetN(), k.th_y_R, k.th_y_L);
 
-		h_th_x_raw->Fill(k.th_x);
-		h_th_y_raw->Fill(k.th_y);
-		h_th_y_raw_flipped->Fill(-k.th_y);
-		
+		h_th_x->Fill(k.th_x);
 		h_th_x_L->Fill(k.th_x_L);
 		h_th_x_R->Fill(k.th_x_R);
-		
+
+		h_th_y->Fill(k.th_y);
 		h_th_y_L->Fill(k.th_y_L);
 		h_th_y_R->Fill(k.th_y_R);
+
+		double th_L = sqrt(k.th_x_L*k.th_x_L + k.th_y_L*k.th_y_L);
+		double th_R = sqrt(k.th_x_R*k.th_x_R + k.th_y_R*k.th_y_R);
+
+		h_th->Fill(k.th);
+		h_th_L->Fill(th_L);
+		h_th_R->Fill(th_R);
 
 		h_vtx_x_L->Fill(k.vtx_x_L);
 		h_vtx_x_R->Fill(k.vtx_x_R);
@@ -1777,16 +1784,18 @@ int main(int argc, char **argv)
 	h_th_y_L_vs_th_y_R->Write();
 	g_th_y_L_vs_th_y_R->Write();
 	
-	h_th_x_raw->Write();
-	h_th_y_raw->Write();
-	h_th_y_raw_flipped->Write();
-	
+	h_th_x->Write();
 	h_th_x_L->Write();
 	h_th_x_R->Write();
 	
+	h_th_y->Write();
 	h_th_y_L->Write();
 	h_th_y_R->Write();
 
+	h_th->Write();
+	h_th_L->Write();
+	h_th_R->Write();
+	
 	{
 		double x[] = {0, 1, 2, 3};
 		double y[] = {anal.th_y_lcut_L, anal.th_y_hcut_L, anal.th_y_lcut_R, anal.th_y_hcut_R};

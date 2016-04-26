@@ -134,4 +134,4 @@ for (int dsi : datasets.keys)
 	}
 }
 
-GShipout(vSkip=0pt);
+GShipout(vSkip=0pt, margin=1mm);

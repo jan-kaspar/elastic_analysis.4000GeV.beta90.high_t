@@ -45,14 +45,16 @@ for (int bi : binnings.keys)
 		scale(Linear, Log);
 		for (int dgni : diagonals.keys)
 		{
-			rObject obj = rGetObj(topDir+dataset+"/fiducial_cut_study/"+options[oi]+"/distributions_"
+			RootObject obj = RootGetObject(topDir+dataset+"/fiducial_cut_study/"+options[oi]+"/distributions_"
 				+diagonals[dgni]+".root", "normalization/"+binnings[bi]+"/h_t_normalized");
 			draw(obj, "vl,eb", StdPen(dgni+1), dgn_labels[dgni]);
 		}
 	
-		limits((0, 1e-4), (2, 1e3), Crop);
-		yaxis(XEquals(1.9, false), dashed);
+		limits((0.4, 1e-4), (1.9, 1e-1), Crop);
+		//yaxis(XEquals(1.9, false), dashed);
 	
 		AttachLegend("before unfolding");
 	}
 }
+
+GShipout(margin=1mm);
