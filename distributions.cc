@@ -514,6 +514,16 @@ int main(int argc, char **argv)
 	TGraph *g_y_R_N_vs_x_R_N_al_sel = new TGraph(); g_y_R_N_vs_x_R_N_al_sel->SetName("g_y_R_N_vs_x_R_N_al_sel");
 	TGraph *g_y_R_F_vs_x_R_F_al_sel = new TGraph(); g_y_R_F_vs_x_R_F_al_sel->SetName("g_y_R_F_vs_x_R_F_al_sel");
 	
+	TH2D *h_y_L_F_vs_x_L_F_al_sel_tsel = new TH2D("h_y_L_F_vs_x_L_F_al_sel_tsel", ";x^{L,F};y^{L,F}", 100, -10., +10., 300, -30., +30.);
+	TH2D *h_y_L_N_vs_x_L_N_al_sel_tsel = new TH2D("h_y_L_N_vs_x_L_N_al_sel_tsel", ";x^{L,N};y^{L,N}", 100, -10., +10., 300, -30., +30.);
+	TH2D *h_y_R_N_vs_x_R_N_al_sel_tsel = new TH2D("h_y_R_N_vs_x_R_N_al_sel_tsel", ";x^{R,N};y^{R,N}", 100, -10., +10., 300, -30., +30.);
+	TH2D *h_y_R_F_vs_x_R_F_al_sel_tsel = new TH2D("h_y_R_F_vs_x_R_F_al_sel_tsel", ";x^{R,F};y^{R,F}", 100, -10., +10., 300, -30., +30.);
+
+	TGraph *g_y_L_F_vs_x_L_F_al_sel_tsel = new TGraph(); g_y_L_F_vs_x_L_F_al_sel_tsel->SetName("g_y_L_F_vs_x_L_F_al_sel_tsel");
+	TGraph *g_y_L_N_vs_x_L_N_al_sel_tsel = new TGraph(); g_y_L_N_vs_x_L_N_al_sel_tsel->SetName("g_y_L_N_vs_x_L_N_al_sel_tsel");
+	TGraph *g_y_R_N_vs_x_R_N_al_sel_tsel = new TGraph(); g_y_R_N_vs_x_R_N_al_sel_tsel->SetName("g_y_R_N_vs_x_R_N_al_sel_tsel");
+	TGraph *g_y_R_F_vs_x_R_F_al_sel_tsel = new TGraph(); g_y_R_F_vs_x_R_F_al_sel_tsel->SetName("g_y_R_F_vs_x_R_F_al_sel_tsel");
+	
 	TH2D *h_y_L_FH_vs_x_L_FH_al_nosel = new TH2D("h_y_L_FH_vs_x_L_FH_al_nosel", ";x^{L,F};y^{L,F}", 100, 0., +20., 300, -30., +30.);
 	TH2D *h_y_L_NH_vs_x_L_NH_al_nosel = new TH2D("h_y_L_NH_vs_x_L_NH_al_nosel", ";x^{L,N};y^{L,N}", 100, 0., +20., 300, -30., +30.);
 	TH2D *h_y_R_NH_vs_x_R_NH_al_nosel = new TH2D("h_y_R_NH_vs_x_R_NH_al_nosel", ";x^{R,N};y^{R,N}", 100, 0., +20., 300, -30., +30.);
@@ -1085,6 +1095,25 @@ int main(int argc, char **argv)
 			}
 		}
 
+		if (k.t >= 0.45 && k.t <= 1.0)
+		{
+			h_y_L_N_vs_x_L_N_al_sel_tsel->Fill(h_al.x_L_N, h_al.y_L_N);
+			h_y_L_F_vs_x_L_F_al_sel_tsel->Fill(h_al.x_L_F, h_al.y_L_F);
+			h_y_R_N_vs_x_R_N_al_sel_tsel->Fill(h_al.x_R_N, h_al.y_R_N);
+			h_y_R_F_vs_x_R_F_al_sel_tsel->Fill(h_al.x_R_F, h_al.y_R_F);
+	
+			{
+				int idx = g_y_L_F_vs_x_L_F_al_sel_tsel->GetN();
+				if (idx < 100000)
+				{
+					g_y_L_F_vs_x_L_F_al_sel_tsel->SetPoint(idx, h_al.x_L_F, h_al.y_L_F);
+					g_y_L_N_vs_x_L_N_al_sel_tsel->SetPoint(idx, h_al.x_L_N, h_al.y_L_N);
+					g_y_R_N_vs_x_R_N_al_sel_tsel->SetPoint(idx, h_al.x_R_N, h_al.y_R_N);
+					g_y_R_F_vs_x_R_F_al_sel_tsel->SetPoint(idx, h_al.x_R_F, h_al.y_R_F);
+				}
+			}
+		}
+
 		if (ev.hH.v_L_F) h_y_L_FH_vs_x_L_FH_al_sel->Fill(hH_al.x_L_F, hH_al.y_L_F);
 		if (ev.hH.v_L_N) h_y_L_NH_vs_x_L_NH_al_sel->Fill(hH_al.x_L_N, hH_al.y_L_N);
 		if (ev.hH.v_R_N) h_y_R_NH_vs_x_R_NH_al_sel->Fill(hH_al.x_R_N, hH_al.y_R_N);
@@ -1573,6 +1602,17 @@ int main(int argc, char **argv)
 	g_y_L_N_vs_x_L_N_al_sel->Write();
 	g_y_R_N_vs_x_R_N_al_sel->Write();
 	g_y_R_F_vs_x_R_F_al_sel->Write();
+	
+	gDirectory = hitDistDir->mkdir("vertical, aligned, after selection, t selection");
+	h_y_L_F_vs_x_L_F_al_sel_tsel->Write();
+	h_y_L_N_vs_x_L_N_al_sel_tsel->Write();
+	h_y_R_N_vs_x_R_N_al_sel_tsel->Write();
+	h_y_R_F_vs_x_R_F_al_sel_tsel->Write();
+
+	g_y_L_F_vs_x_L_F_al_sel_tsel->Write();
+	g_y_L_N_vs_x_L_N_al_sel_tsel->Write();
+	g_y_R_N_vs_x_R_N_al_sel_tsel->Write();
+	g_y_R_F_vs_x_R_F_al_sel_tsel->Write();
 	
 	gDirectory = hitDistDir->mkdir("horizontal, aligned, before selection");
 	h_y_L_FH_vs_x_L_FH_al_nosel->Write();

@@ -25,7 +25,7 @@ dip_fit/fit
 
 efficiency/test_high_thx
 
-high_t_dgn_difference/evaluate_stat_significance
+dgn_difference/high_t/evaluate_stat_significance
 
 models/sample_models
 
