@@ -115,14 +115,14 @@ function RunOneDir()
 	cp "$input" "$dir/$src_file"
 	cd "$dir"
 
-	GSL_DIR="/afs/cern.ch/cms/slc6_amd64_gcc481/external/gsl/1.10/"
+	GSL_DIR="/cvmfs/cms.cern.ch/slc6_amd64_gcc481/external/gsl/1.10"
 	
 	echo "$tag @ $dir > compiling"
 	g++ -O3 -g -Wall -Wextra -Werror --std=c++11\
 			-I"$top_dir" \
 			`root-config --libs` -lMinuit -lMinuit2 `root-config --cflags` \
 			-I"$CMSSW_BASE/src" \
-			-I"/afs/cern.ch/cms/slc6_amd64_gcc481/external/fastjet/3.0.3/include" \
+			-I"/cvmfs/cms.cern.ch/slc6_amd64_gcc481/external/fastjet/3.0.3/include" \
 			-L"$CMSSW_BASE/lib/slc6_amd64_gcc481" \
 			-lTotemAnalysisTotemNtuplizer \
 			-I$GSL_DIR/include \
