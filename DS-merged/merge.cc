@@ -86,6 +86,8 @@ int main()
 	binnings.push_back("ob-1-30-0.10");
 	binnings.push_back("ob-2-20-0.20");
 	binnings.push_back("ob-3-10-0.30");
+	binnings.push_back("bt1");
+	binnings.push_back("bt2");
 
 	// prepare output
 	TFile *f_out = new TFile("merged.root", "recreate");

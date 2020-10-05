@@ -417,8 +417,7 @@ void CalculateCorrection(TF1 *ff, TH1D *corr, int color = 1)
 	source_dist_t = ff;
 
 	// sample distributions
-	// TODO: increase ??
-	int N_per_bin = 2;
+	int N_per_bin = 5;
 
 	TGraph *g_tr = new TGraph(); g_tr->SetName("g_tr"); g_tr->SetLineColor(1);
 	TGraph *g_re = new TGraph(); g_re->SetName("g_re"); g_re->SetLineColor(2);
@@ -616,6 +615,8 @@ int main(int argc, const char **argv)
 	binnings.push_back("ob-1-30-0.10");
 	binnings.push_back("ob-2-20-0.20");
 	binnings.push_back("ob-3-10-0.30");
+	binnings.push_back("bt1");
+	binnings.push_back("bt2");
 
 	// fit parametrisations
 	InitFitFunctions();

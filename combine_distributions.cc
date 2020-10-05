@@ -89,6 +89,8 @@ int main(int argc, char **argv)
 	binnings.push_back("ob-1-30-0.10");
 	binnings.push_back("ob-2-20-0.20");
 	binnings.push_back("ob-3-10-0.30"); 
+	binnings.push_back("bt1");
+	binnings.push_back("bt2");
 
 	// histograms to merge
 	vector<string> sources;

@@ -129,13 +129,16 @@ void BuildBinning(const Analysis &anal, const string &type, double* &binEdges, u
 		size_t p1 = type.find("-", 0);
 		size_t p2 = type.find("-", p1 + 1);
 		size_t p3 = type.find("-", p2 + 1);
+
+		bool special1 = (type == "ob-1-30-0.10-S");
+		bool special2 = (type == "ob-2-20-0.20-S");
 		
 		double n_smearing_sigmas = atof(type.substr(p1+1, p2-p1-1).c_str());
 		string stat_unc_label = type.substr(p2+1, p3-p2-1);
 		double bs_max = atof(type.substr(p3+1).c_str());
 
 		// load generators
-		TFile *f_in = TFile::Open("/afs/cern.ch/work/j/jkaspar/analyses/elastic/4000GeV/beta90/high_t/binning/generators.root");
+		TFile *f_in = TFile::Open("/afs/cern.ch/work/j/jkaspar/work/analyses/elastic/4000GeV/beta90/high_t/binning/generators.root");
 		//TFile *f_in = TFile::Open((path_prefix + "../binning/generators.root").c_str());
 		TGraph *g_rms_t = (TGraph *) f_in->Get("g_rms_t");
 		TGraph *g_bs_fsu = (TGraph *) f_in->Get( ("g_bs_stat_unc_" + stat_unc_label).c_str() );
@@ -151,10 +154,103 @@ void BuildBinning(const Analysis &anal, const string &type, double* &binEdges, u
 			if (w > bs_max)
 				w = bs_max;
 
+			if (special1)
+			{
+				//if (t > 0.54)
+				//	w = 0.04;
+				if (t > 0.57)
+					w = 0.08;
+				if (t > 1.2)
+					w = 0.20;
+			}
+
+			if (special2)
+			{
+				if (t > 0.54)
+					w = 0.04;
+				if (t > 0.565)
+					w = 0.08;
+				if (t > 1.2)
+					w = 0.20;
+			}
+
 			t += w;
 		}
 
 		delete f_in;
+	}
+
+	if (type.find("bt1") == 0)
+	{
+		// load generators
+		TFile *f_in = TFile::Open("/afs/cern.ch/work/j/jkaspar/work/analyses/elastic/4000GeV/beta90/high_t/binning/generators.root");
+		TGraph *g_rms_t = (TGraph *) f_in->Get("g_rms_t");
+		TGraph *g_bs_fsu_10 = (TGraph *) f_in->Get("g_bs_stat_unc_10");
+		TGraph *g_bs_fsu_30 = (TGraph *) f_in->Get("g_bs_stat_unc_30");
+
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+
+			double w_ob1 = max(1. * g_rms_t->Eval(t), g_bs_fsu_30->Eval(t));
+			double t_c = t + w_ob1/2.;
+			w_ob1 = max(1. * g_rms_t->Eval(t_c), g_bs_fsu_30->Eval(t_c));
+
+			double w_ob3 = max(3. * g_rms_t->Eval(t), g_bs_fsu_10->Eval(t));
+			t_c = t + w_ob3/2.;
+			w_ob3 = max(3. * g_rms_t->Eval(t_c), g_bs_fsu_10->Eval(t_c));
+			w_ob3 = min(w_ob3, 0.20);
+
+			double w = w_ob1;
+
+			if (t > 0.533)
+				w = 0.027;
+
+			if (t > 0.562)
+				w = w_ob3;
+
+			t += w;
+		}
+	}
+
+	if (type.find("bt2") == 0)
+	{
+		// load generators
+		TFile *f_in = TFile::Open("/afs/cern.ch/work/j/jkaspar/work/analyses/elastic/4000GeV/beta90/high_t/binning/generators.root");
+		TGraph *g_rms_t = (TGraph *) f_in->Get("g_rms_t");
+		TGraph *g_bs_fsu_10 = (TGraph *) f_in->Get("g_bs_stat_unc_10");
+		TGraph *g_bs_fsu_30 = (TGraph *) f_in->Get("g_bs_stat_unc_30");
+
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+
+			double w_ob1 = max(1. * g_rms_t->Eval(t), g_bs_fsu_30->Eval(t));
+			double t_c = t + w_ob1/2.;
+			w_ob1 = max(1. * g_rms_t->Eval(t_c), g_bs_fsu_30->Eval(t_c));
+
+			double w_ob3 = max(3. * g_rms_t->Eval(t), g_bs_fsu_10->Eval(t));
+			t_c = t + w_ob3/2.;
+			w_ob3 = max(3. * g_rms_t->Eval(t_c), g_bs_fsu_10->Eval(t_c));
+			w_ob3 = min(w_ob3, 0.20);
+
+			double w = w_ob1;
+
+			if (t > 0.533)
+				w = 0.027;
+
+			if (t > 0.562)
+				w = w_ob3;
+
+			if (t > 0.857 && t < 0.940)
+				be.push_back(t + w/2.);
+			if (t > 0.939 && t < 1.064)
+				be.push_back(t + w/2.);
+
+			t += w;
+		}
 	}
 
 	// between t_max and t_max_full
