@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 		return rcIncompatibleDiagonal;
 	
 	// default parameters
-	unsigned int detailsLevel = 10; 	// 0: no details, 1: some details, >= 2 all details
+	unsigned int detailsLevel = 0; 	// 0: no details, 1: some details, >= 2 all details
 	bool overrideCutSelection = false;	// whether the default cut selection should be overriden by the command-line selection
 	string cutSelectionString;
 	string outputDir = ".";
@@ -332,6 +332,8 @@ int main(int argc, char **argv)
 	binnings.push_back("ob-1-30-0.10");
 	binnings.push_back("ob-2-20-0.20");
 	binnings.push_back("ob-3-10-0.30");
+	binnings.push_back("bt1");
+	binnings.push_back("bt2");
 
 	// init files
 	TFile *inF = TFile::Open((inputDir + "/distill_" + argv[1] + ".root").c_str());
@@ -533,7 +535,6 @@ int main(int argc, char **argv)
 	TH2D *h_y_L_NH_vs_x_L_NH_al_sel = new TH2D("h_y_L_NH_vs_x_L_NH_al_sel", ";x^{L,N};y^{L,N}", 100, -10., +10., 300, -30., +30.);
 	TH2D *h_y_R_NH_vs_x_R_NH_al_sel = new TH2D("h_y_R_NH_vs_x_R_NH_al_sel", ";x^{R,N};y^{R,N}", 100, -10., +10., 300, -30., +30.);
 	TH2D *h_y_R_FH_vs_x_R_FH_al_sel = new TH2D("h_y_R_FH_vs_x_R_FH_al_sel", ";x^{R,F};y^{R,F}", 100, -10., +10., 300, -30., +30.);
-	
 
 	// book alignment histograms
 	map<signed int, TGraph *> g_y_L_N_vs_x_L_N_sel, g_y_L_F_vs_x_L_F_sel, g_y_R_N_vs_x_R_N_sel, g_y_R_F_vs_x_R_F_sel, g_w_vs_timestamp_sel;
@@ -589,6 +590,12 @@ int main(int argc, char **argv)
 	TH2D *h_y_L_ratioFN_vs_y_L_N = new TH2D("h_y_L_ratioFN_vs_y_L_N", ";y^{LN};y^{LF} / y^{LN}", 300, -30., +30., 300, 1.08, 1.14);
 	TH2D *h_y_R_ratioFN_vs_y_R_N = new TH2D("h_y_R_ratioFN_vs_y_R_N", ";y^{RN};y^{RF} / y^{RN}", 300, -30., +30., 300, 1.08, 1.14);
 
+	TH1D *h_x_diffFN_L = new TH1D("h_x_diffFN_L", ";x^{L,F} - x^{L,N}", 4000, -2.0, +2.0);
+	TH1D *h_x_diffFN_R = new TH1D("h_x_diffFN_R", ";x^{R,F} - x^{R,N}", 4000, -2.0, +2.0);
+
+	TH1D *h_x_diffFN_L_tsel = new TH1D("h_x_diffFN_L_tsel", ";x^{L,F} - x^{L,N}", 4000, -2.0, +2.0);
+	TH1D *h_x_diffFN_R_tsel = new TH1D("h_x_diffFN_R_tsel", ";x^{R,F} - x^{R,N}", 4000, -2.0, +2.0);
+
 	// book angluar histograms
 	TH1D *th_x_diffLR = new TH1D("th_x_diffLR", ";#theta_{x}^{R} - #theta_{x}^{L}", 1000, -500E-6, +500E-6); th_x_diffLR->Sumw2();
 	TH1D *th_y_diffLR = new TH1D("th_y_diffLR", ";#theta_{y}^{R} - #theta_{y}^{L}", 1000, -50E-6, +50E-6); th_y_diffLR->Sumw2();
@@ -625,6 +632,10 @@ int main(int argc, char **argv)
 	TH1D *h_th_x_L = new TH1D("h_th_x_L", ";#theta_{x}^{L}", 600, -300E-6, +300E-6);
 	TH1D *h_th_x_R = new TH1D("h_th_x_R", ";#theta_{x}^{R}", 600, -300E-6, +300E-6);
 	
+	TH1D *h_th_x_tsel = new TH1D("h_th_x_tsel", ";#theta_{x}", 600, -300E-6, +300E-6);
+	TH1D *h_th_x_L_tsel = new TH1D("h_th_x_L_tsel", ";#theta_{x}^{L}", 600, -300E-6, +300E-6);
+	TH1D *h_th_x_R_tsel = new TH1D("h_th_x_R_tsel", ";#theta_{x}^{R}", 600, -300E-6, +300E-6);
+
 	TH1D *h_th_y = new TH1D("h_th_y", ";#theta_{y}", 960, -120E-6, +120E-6);
 	TH1D *h_th_y_L = new TH1D("h_th_y_L", ";#theta_{y}^{L}", 960, -120E-6, +120E-6);
 	TH1D *h_th_y_R = new TH1D("h_th_y_R", ";#theta_{y}^{R}", 960, -120E-6, +120E-6);
@@ -1095,7 +1106,9 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (k.t >= 0.45 && k.t <= 1.0)
+		const bool tsel = (k.t >= 0.45 && k.t <= 1.0);
+
+		if (tsel)
 		{
 			h_y_L_N_vs_x_L_N_al_sel_tsel->Fill(h_al.x_L_N, h_al.y_L_N);
 			h_y_L_F_vs_x_L_F_al_sel_tsel->Fill(h_al.x_L_F, h_al.y_L_F);
@@ -1134,6 +1147,15 @@ int main(int argc, char **argv)
 
 		h_y_L_ratioFN_vs_y_L_N->Fill(h_al.y_L_N, h_al.y_L_F / h_al.y_L_N);
 		h_y_R_ratioFN_vs_y_R_N->Fill(h_al.y_R_N, h_al.y_R_F / h_al.y_R_N);
+
+		h_x_diffFN_L->Fill(h_al.x_L_F - h_al.x_L_N);
+		h_x_diffFN_R->Fill(h_al.x_R_F - h_al.x_R_N);
+
+		if (tsel)
+		{
+			h_x_diffFN_L_tsel->Fill(h_al.x_L_F - h_al.x_L_N);
+			h_x_diffFN_R_tsel->Fill(h_al.x_R_F - h_al.x_R_N);
+		}
 
 		th_x_diffLR->Fill(k.th_x_R - k.th_x_L);
 		th_y_diffLR->Fill(k.th_y_R - k.th_y_L);
@@ -1177,6 +1199,13 @@ int main(int argc, char **argv)
 		h_th_x->Fill(k.th_x);
 		h_th_x_L->Fill(k.th_x_L);
 		h_th_x_R->Fill(k.th_x_R);
+
+		if (tsel)
+		{
+			h_th_x_tsel->Fill(k.th_x);
+			h_th_x_L_tsel->Fill(k.th_x_L);
+			h_th_x_R_tsel->Fill(k.th_x_R);
+		}
 
 		h_th_y->Fill(k.th_y);
 		h_th_y_L->Fill(k.th_y_L);
@@ -1788,6 +1817,12 @@ int main(int argc, char **argv)
 
 	h_y_L_ratioFN_vs_y_L_N->Write();
 	h_y_R_ratioFN_vs_y_R_N->Write();
+
+	h_x_diffFN_L->Write();
+	h_x_diffFN_R->Write();
+
+	h_x_diffFN_L_tsel->Write();
+	h_x_diffFN_R_tsel->Write();
 	
 	gDirectory = outF->mkdir("selected - angles");
 	th_x_diffLR->Write();
@@ -1827,6 +1862,10 @@ int main(int argc, char **argv)
 	h_th_x->Write();
 	h_th_x_L->Write();
 	h_th_x_R->Write();
+
+	h_th_x_tsel->Write();
+	h_th_x_L_tsel->Write();
+	h_th_x_R_tsel->Write();
 	
 	h_th_y->Write();
 	h_th_y_L->Write();
