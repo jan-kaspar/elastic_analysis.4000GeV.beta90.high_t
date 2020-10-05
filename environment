@@ -2,7 +2,7 @@
 
 cwd=`pwd`
 
-cd "/afs/cern.ch/work/j/jkaspar/software/totem_offline/705"
+cd "/afs/cern.ch/work/j/jkaspar/work/software/totem_offline/705"
 source environment
 
 compName=$(uname -n)
