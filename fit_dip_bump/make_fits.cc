@@ -58,7 +58,8 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, bool save=true)
 	{
 		unique_ptr<TF1> ff2(new TF1("ff2", "[0] + [1] * pow(x - [2], 2)"));
 		ff2->SetParameters(0.0147, 1., 0.523);
-		h_dsdt->Fit(ff2.get(), "Q", "", 0.47, 0.57);
+		ff2->SetRange(0.47, 0.57);
+		h_dsdt->Fit(ff2.get(), "RQ", "");
 		if (save)
 			ff2->Write("f_dip");
 
@@ -69,7 +70,8 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, bool save=true)
 
 		unique_ptr<TF1> ff3(new TF1("ff3", "[0] + [1] * pow(x - [2], 2)"));
 		ff3->SetParameters(0.0295, -1., 0.69);
-		h_dsdt->Fit(ff3.get(), "Q", "", 0.55, 0.85);
+		ff3->SetRange(0.57, 0.85);
+		h_dsdt->Fit(ff3.get(), "RQ", "");
 		if (save)
 			ff3->Write("f_bump");
 
@@ -88,8 +90,6 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, bool save=true)
 
 	return r;
 }
-
-//----------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------
 
@@ -142,7 +142,10 @@ int main()
 		for (const auto &syst_mode : syst_modes)
 		{
 			gDirectory = d_model->mkdir(syst_mode.first.c_str());
+
 			auto h_dsdt_mod = ApplySystematicMode(h_dsdt, syst_mode.second);
+			h_dsdt_mod->Write("h_dsdt_mod");
+
 			FitResults r_syst = MakeFit(h_dsdt_mod.get(), model);
 
 			vsum[0] += pow(r_syst.t_dip - r_central.t_dip, 2);
