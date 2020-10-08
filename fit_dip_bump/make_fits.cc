@@ -105,10 +105,18 @@ int main()
 	TH1D *h_dsdt = (TH1D *) f_in->Get("bt1/DS4-sc/combined/h_dsdt");
 
 	// load systematics
+	const vector<string> syst_mode_names = {
+		"alig-sh-thx", "alig-sh-thy", "tilt-thx-thy",
+		"opt-m1", "opt-m2",
+		"acc-corr-sigma-unc", "acc-corr-sigma-asym", "acc-corr-non-gauss",
+		"eff-slp", "beam-mom",
+		"unsm-sigma-x", "unsm-sigma-y", "unsm-model",
+		"norm"
+	};
+
 	map<string, TGraph*> syst_modes;
 	unique_ptr<TFile> f_in_syst(TFile::Open("../DS4/systematics_matrix.root"));
-	for (const string &m : {"alig-sh-thx", "alig-sh-thy", "tilt-thx-thy", "opt-m1",
-		"opt-m2", "acc-corr-sigma-unc", "acc-corr-sigma-asym", "acc-corr-non-gauss", "eff-slp", "beam-mom", "norm"})
+	for (const string &m : syst_mode_names)
 	{
 		TGraph *c1 = (TGraph *) f_in_syst->Get(("contributions/" + m + "/g_eff_comb1").c_str());
 		if (c1)
