@@ -1,16 +1,7 @@
-#include "../common_definitions.h"
-#include "../common_algorithms.h"
+#include "common_definitions.h"
+#include "common_algorithms.h"
 #include "parameters.h"
-#include "../common.h"
-
-/*
-#include "TFile.h"
-#include "TH2.h"
-#include "TTree.h"
-#include "TCanvas.h"
-#include "TProfile.h"
-
-*/
+#include "common.h"
 
 #include <cassert>
 
@@ -86,6 +77,7 @@ int main(int argc, char **argv)
 	// binnings
 	vector<string> binnings;
 	binnings.push_back("ub");
+	binnings.push_back("NPB");
 	binnings.push_back("ob-1-30-0.10");
 	binnings.push_back("ob-2-20-0.20");
 	binnings.push_back("ob-3-10-0.30"); 
