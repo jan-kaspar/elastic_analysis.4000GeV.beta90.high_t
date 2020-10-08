@@ -495,9 +495,11 @@ int main(int argc, const char **argv)
 	// binnings
 	vector<string> binnings;
 	vector< vector<double> > alphasPerBinning;
-	binnings.push_back("ob-1-30-0.10"); alphasPerBinning.push_back({1E0, 1E-1, 5E-2});
-	//binnings.push_back("ob-2-20-0.20"); alphasPerBinning.push_back({1E-3});
-	binnings.push_back("ob-3-10-0.30"); alphasPerBinning.push_back({5E-1, 5E-2, 5E-3});
+	binnings.push_back("ob-1-30-0.10"); alphasPerBinning.push_back({1E0, 5E-1, 1E-1, 5E-2, 1E-3});
+	//binnings.push_back("ob-2-20-0.20"); alphasPerBinning.push_back({1E-3});1E0, 1E-1, 5E-2, 
+	//binnings.push_back("ob-3-10-0.30"); alphasPerBinning.push_back({5E-1, 5E-2, 5E-3});
+	binnings.push_back("bt1"); alphasPerBinning.push_back({1E0, 5E-1, 1E-1, 5E-2, 1E-2, 5E-3, 1E-3});
+	binnings.push_back("bt2"); alphasPerBinning.push_back({1E0, 5E-1, 1E-1, 5E-2, 1E-2, 5E-3, 1E-3});
 
 	// unsmearing models
 	vector< vector<string> > models;

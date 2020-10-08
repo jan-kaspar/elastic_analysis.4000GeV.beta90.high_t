@@ -1,7 +1,7 @@
-#include "../common_definitions.h"
-#include "../common_algorithms.h"
+#include "common_definitions.h"
+#include "common_algorithms.h"
 #include "parameters.h"
-#include "../common.h"
+#include "common.h"
 
 #include "TFile.h"
 #include "TRandom3.h"
@@ -226,8 +226,10 @@ int main(int argc, char **argv)
 	vector<string> binnings;
 	//binnings.push_back("ub");
 	binnings.push_back("ob-1-30-0.10");
-	binnings.push_back("ob-2-20-0.20");
-	binnings.push_back("ob-3-10-0.30");
+	//binnings.push_back("ob-2-20-0.20");
+	//binnings.push_back("ob-3-10-0.30");
+	binnings.push_back("bt1");
+	binnings.push_back("bt2");
 
 	// models
 	vector<string> models;

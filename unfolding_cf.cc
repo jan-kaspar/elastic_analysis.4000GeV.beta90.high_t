@@ -318,6 +318,8 @@ TF1* InitFitFunctions(double norm = 5.)
 	ff->SetRange(anal.t_min_full, anal.t_max_full);
 	parameterizations.push_back(ff);
 
+	// bad results
+	/*
 	ff = new TF1("exp5+erf*exp2", "[0] * exp(-[1]*x + [2]*x*x + [3]*x*x*x + [4]*x*x*x*x + [5]*x*x*x*x*x) + TMath::Erf((x - [6])/[7]) * [8] * exp(-[9]*x + [10]*x*x)");
 	ff->SetParameter(0, 539.);
 	ff->SetParameter(1, 20.6);
@@ -334,6 +336,7 @@ TF1* InitFitFunctions(double norm = 5.)
 	ff->SetParameter(10, 0.);
 	ff->SetRange(anal.t_min_full, anal.t_max_full);
 	parameterizations.push_back(ff);
+	*/
 	
 	ff = new TF1("p1*exp3+p1*exp1", "([0] + [1]*x) * exp([2]*x + [3]*x*x + [4]*x*x*x) + ([5] + [6]*x) * exp([7]*x)");
 	ff->SetParameter(0, 544.);
@@ -612,6 +615,7 @@ int main(int argc, const char **argv)
 	// binnings
 	vector<string> binnings;
 	binnings.push_back("ub");
+	binnings.push_back("NPB");
 	binnings.push_back("ob-1-30-0.10");
 	binnings.push_back("ob-2-20-0.20");
 	binnings.push_back("ob-3-10-0.30");
@@ -738,7 +742,7 @@ int main(int argc, const char **argv)
 				DoUnfolding(h_dsdt, parameterizations[pi]);
 
 				// performance optimization
-				if (binnings[bi].compare("ob-1-30-0.10") != 0)
+				if (binnings[bi] != "bt1")
 					break;
 			}
 		}

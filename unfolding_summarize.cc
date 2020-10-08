@@ -1,10 +1,10 @@
 #include "input_files.h"
 
-#include "../common_definitions.h"
-#include "../common_algorithms.h"
+#include "common_definitions.h"
+#include "common_algorithms.h"
 #include "parameters.h"
-#include "../common.h"
-#include "../stat.h"
+#include "common.h"
+#include "stat.h"
 
 #include "TFile.h"
 #include "TH1D.h"
@@ -39,14 +39,20 @@ void AnalyzeModelDependence(const vector<TH1D *> &hists)
 	// histogram showing mean correction and its std. deviation
 	TH1D *h_mean_stddev = new TH1D(*h_ref);
 	h_mean_stddev->SetName("h_mean_stddev");
+	TH1D *h_unc = new TH1D(*h_ref);
+	h_unc->SetName("h_unc");
 	for (int bi = 1; bi <= bins; bi++)
 	{
 		int i = bi - 1;
 		h_mean_stddev->SetBinContent(bi, st.GetMean(i));
 		h_mean_stddev->SetBinError(bi, st.GetStdDev(i));
+
+		h_unc->SetBinContent(bi, st.GetStdDev(i));
+		h_unc->SetBinError(bi, 0.);
 	}
 
 	h_mean_stddev->Write();
+	h_unc->Write();
 
 	// correlation matrix
 	const double* binEdges = h_ref->GetXaxis()->GetXbins()->GetArray();
@@ -61,6 +67,30 @@ void AnalyzeModelDependence(const vector<TH1D *> &hists)
 	}
 
 	h2_corr_mat->Write();
+}
+
+//----------------------------------------------------------------------------------------------------
+
+void ExtractDifference(const vector<TH1D *> &hists)
+{
+	printf("\n>> ExtractDifference\n");
+
+	if (hists.size() != 2)
+		return;
+
+	TH1D *h1 = hists[0];
+	TH1D *h2 = hists[1];
+
+	TH1D *h_unc = new TH1D(*h1);
+
+	for (int bi = 1; bi <= h1->GetNbinsX(); ++bi)
+	{
+		const double v1 = h1->GetBinContent(bi);
+		const double v2 = h2->GetBinContent(bi);
+		h_unc->SetBinContent(bi, v2 - v1);
+	}
+
+	h_unc->Write("h_unc");
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -94,7 +124,7 @@ int main(int argc, char **argv)
 	// binnings
 	vector<string> binnings;
 	binnings.push_back("ob-1-30-0.10");
-	//binnings.push_back("ob-3-10-0.10");
+	binnings.push_back("bt1");
 
 	// get input
 	TFile *f_in_cf = new TFile(("unfolding_cf_" + dgn_str + ".root").c_str());
@@ -104,38 +134,51 @@ int main(int argc, char **argv)
 	TFile *f_out = new TFile(("unfolding_summarize_" + dgn_str + ".root").c_str(), "recreate");
 
 	// process data
-	for (unsigned int bi = 0; bi < binnings.size(); bi++)
+	for (const auto &binning : binnings)
 	{
-		TDirectory *binningDir = f_out->mkdir(binnings[bi].c_str());
+		TDirectory *binningDir = f_out->mkdir(binning.c_str());
 
 		// model uncertainty
 		gDirectory = binningDir->mkdir("model");
 
 		vector<TH1D *> histList;
-		AddHistToList(f_in_cf, binnings[bi]+"/exp3+exp4/+0,+0/corr_final", histList);
-		AddHistToList(f_in_cf, binnings[bi]+"/exp5+erf*exp2/+0,+0/corr_final", histList);
-		AddHistToList(f_in_cf, binnings[bi]+"/p1*exp3+p1*exp1/+0,+0/corr_final", histList);
-		AddHistToList(f_in_cf, binnings[bi]+"/p1*exp3+p2*exp2/+0,+0/corr_final", histList);
-		AddHistToList(f_in_cf, binnings[bi]+"/exp3-intf-exp1/+0,+0/corr_final", histList);
-		AddHistToList(f_in_cf, binnings[bi]+"/(exp3-intf-exp1)*expG/+0,+0/corr_final", histList);
+		AddHistToList(f_in_cf, binning+"/exp3+exp4/+0,+0/corr_final", histList);
+		//AddHistToList(f_in_cf, binning+"/exp5+erf*exp2/+0,+0/corr_final", histList);
+		AddHistToList(f_in_cf, binning+"/p1*exp3+p1*exp1/+0,+0/corr_final", histList);
+		AddHistToList(f_in_cf, binning+"/p1*exp3+p2*exp2/+0,+0/corr_final", histList);
+		AddHistToList(f_in_cf, binning+"/exp3-intf-exp1/+0,+0/corr_final", histList);
+		AddHistToList(f_in_cf, binning+"/(exp3-intf-exp1)*expG/+0,+0/corr_final", histList);
 		
-		// TODO: resolve binning and diagonal dependence
-		AddHistToList(f_in_gr, binnings[bi]+"/smearing_matrix_mc_45b_56t.root,p1*exp3+p2*exp2,ob-1-30-0.10/alpha=1.00E+00/h_corr", histList);
-		AddHistToList(f_in_gr, binnings[bi]+"/smearing_matrix_mc_45b_56t.root,exp3-intf-exp1,ob-1-30-0.10/alpha=1.00E+00/h_corr", histList);
-		AddHistToList(f_in_gr, binnings[bi]+"/smearing_matrix_mc_45b_56t.root,p1*exp3+p2*exp2,ob-1-30-0.10/alpha=1.00E-01/h_corr", histList);
-		AddHistToList(f_in_gr, binnings[bi]+"/smearing_matrix_mc_45b_56t.root,exp3-intf-exp1,ob-1-30-0.10/alpha=1.00E-01/h_corr", histList);
+		AddHistToList(f_in_gr, binning+"/smearing_matrix_mc_" + dgn_str + ".root,p1*exp3+p2*exp2," + binning + "/alpha=1.00E+00/h_corr", histList);
+		AddHistToList(f_in_gr, binning+"/smearing_matrix_mc_" + dgn_str + ".root,exp3-intf-exp1," + binning + "/alpha=1.00E+00/h_corr", histList);
+		AddHistToList(f_in_gr, binning+"/smearing_matrix_mc_" + dgn_str + ".root,p1*exp3+p2*exp2," + binning + "/alpha=1.00E-01/h_corr", histList);
+		AddHistToList(f_in_gr, binning+"/smearing_matrix_mc_" + dgn_str + ".root,exp3-intf-exp1," + binning + "/alpha=1.00E-01/h_corr", histList);
 
 		AnalyzeModelDependence(histList);
 
 		// sigma (x and y) uncertainty
-		// TODO
+		if (binning == "bt1")
+		{
+			const string model = "exp3-intf-exp1";
 
+			gDirectory = binningDir->mkdir("sigma x");
+			histList.clear();
+			AddHistToList(f_in_cf, binning+"/" + model + "/+0,+0/corr_final", histList);
+			AddHistToList(f_in_cf, binning+"/" + model + "/+1,+0/corr_final", histList);
+			ExtractDifference(histList);
 
-		// TODO: careful about histogram "jumps" at low and high-|t| edges !!
+			gDirectory = binningDir->mkdir("sigma y");
+			histList.clear();
+			AddHistToList(f_in_cf, binning+"/" + model + "/+0,+0/corr_final", histList);
+			AddHistToList(f_in_cf, binning+"/" + model + "/+0,+1/corr_final", histList);
+			ExtractDifference(histList);
+		}
 	}
 
+	// clean up
 	delete f_in_cf;
 	delete f_in_gr;
 	delete f_out;
+
 	return 0;
 }
