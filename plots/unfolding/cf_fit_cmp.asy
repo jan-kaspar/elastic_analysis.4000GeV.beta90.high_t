@@ -10,11 +10,10 @@ string datasets[] = { "DS4" };
 
 string diagonals[] = { "45b_56t", "45t_56b" };
 
-string binning = "ob-1-30-0.10";
+//string binning = "ob-1-30-0.10";
+string binning = "bt1";
 
-// TODO
-//string iteration = "iteration 1";
-string iteration = "iteration 0";
+string iteration = "iteration 2";
 
 //----------------------------------------------------------------------------------------------------
 
@@ -23,10 +22,12 @@ void DrawOne(string fits[])
 	for (int dsi : datasets.keys)
 	{
 		NewRow();
+
+		NewPad(false);
 	
 		for (int dgni : diagonals.keys)
 		{
-			NewPad("$t\ung{GeV^2}$");
+			NewPad("$|t|\ung{GeV^2}$");
 			scale(Linear, Log);
 			currentpad.xTicks = LeftTicks(0.2, 0.1);
 			
@@ -62,10 +63,18 @@ void DrawOne(string fits[])
 //----------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------
 
+NewPad(false);
+AddToLegend("<binning: " + binning);
+AddToLegend("<iteration: " + iteration);
+AttachLegend();
+
+for (int dgni : diagonals.keys)
+	NewPadLabel(replace(diagonals[dgni], "_", "\_"));
+
 
 string fits[] = {
 	"exp3+exp4",
-	"exp5+erf*exp2",
+	//"exp5+erf*exp2",
 };
 
 NewRow();
@@ -90,3 +99,7 @@ string fits[] = {
 
 NewRow();
 DrawOne(fits);
+
+//--------------------
+
+GShipout(vSkip=0mm);

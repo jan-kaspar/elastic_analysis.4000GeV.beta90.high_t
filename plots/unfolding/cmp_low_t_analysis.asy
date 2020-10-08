@@ -7,7 +7,7 @@ string diagonals[] = { "45b_56t", "45t_56b" };
 string dgn_labels[] = { "45b -- 56t", "45t -- 56b" };
 
 string topDir = "../../";
-string topDir_old = "../../../4000GeV,beta90/";
+string topDir_old = "../../../main/";
 
 xSizeDef = 10cm;
 ySizeDef = 8cm;
