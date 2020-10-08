@@ -123,6 +123,26 @@ void BuildBinning(const Analysis &anal, const string &type, double* &binEdges, u
 			be.push_back( - log( (1. - double(bi) / N_bins_cen) * exp(-B*anal.t_min) + double(bi) * exp(-B*anal.t_max) / N_bins_cen ) / B );
 	}
 
+	if (type.compare("NPB") == 0)	// the same as used for NPB 899 publication
+	{
+		be.push_back(anal.t_min);
+		be.push_back(0.024);
+
+		double t = 0.026972703;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+
+			double w = 1.;
+			if (t >= 0.0 && t < 0.2) w = (t - 0.0) / (0.2 - 0.0) * (0.010 - 0.002) + 0.002;
+			if (t >= 0.2 && t < 0.8) w = (t - 0.2) / (0.8 - 0.2) * (0.015 - 0.010) + 0.010;
+			if (t >= 0.8 && t < 1.0) w = (t - 0.8) / (1.0 - 0.8) * (0.030 - 0.015) + 0.015;
+			if (t >= 1.0 && t < 1.4) w = (t - 1.0) / (1.4 - 1.0) * (0.099 - 0.030) + 0.030;
+
+			t += w;
+		}
+	}
+
 	if (type.find("ob") == 0)
 	{
 		// extract parameters
