@@ -33,6 +33,8 @@ unfolding
 
 17) DS-merged/merge: merge results from 17)
 
+18) unfolding_summarize: input=unfolding_cf_<dgn>, unfolding_gr_<dgn>, output=unfolding_summarize_<dgn>
+
 --------------------
 systematics
 
@@ -40,7 +42,7 @@ systematics
 
 21) systematics_ni: input=model (point 20), output=systematics_ni_<dgn>
 
-22) systematics_matrix_mc: input=systematics_matrix_<dgn>, output=systematics_matrix
+22) systematics_matrix: input=systematics_ni_<dgn>, unfolding_summarize_<dgn>, output=systematics_matrix
 
 
 
