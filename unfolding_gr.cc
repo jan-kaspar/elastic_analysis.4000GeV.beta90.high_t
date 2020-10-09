@@ -454,9 +454,9 @@ void DoUnfolding(TH1D *h_data, const TMatrixD &S_in, const TVectorD &C_in, doubl
 	h_unfold_resmear->SetName("h_unfold_resmear");
 	h_unfold_resmear->SetLineColor(8);
 
-	TH1D *h_corr = new TH1D(*h_data);
-	h_corr->SetName("h_corr");
-	h_corr->SetLineColor(1);
+	TH1D *h_corr_raw = new TH1D(*h_data);
+	h_corr_raw->SetName("h_corr_raw");
+	h_corr_raw->SetLineColor(1);
 
 	for (int i = 0; i < dim; i++)
 	{
@@ -467,12 +467,27 @@ void DoUnfolding(TH1D *h_data, const TMatrixD &S_in, const TVectorD &C_in, doubl
 		h_unfold_resmear->SetBinContent(bi, v_sm(i));
 		h_unfold_resmear->SetBinError(bi, 0.);
 
-		h_corr->SetBinContent(bi, corr(i));
-		h_corr->SetBinError(bi, sqrt(V_corr(i, i)));
+		h_corr_raw->SetBinContent(bi, corr(i));
+		h_corr_raw->SetBinError(bi, sqrt(V_corr(i, i)));
 	}
 
 	h_unfold->Write();
 	h_unfold_resmear->Write();
+	h_corr_raw->Write();
+
+	// regularise high-|t| bins
+	double av = 0.;
+	TH1D *h_corr = new TH1D(*h_corr_raw);
+	h_corr->SetName("h_corr");
+
+	for (int bi = 1; bi <= h_corr->GetNbinsX(); ++bi)
+	{
+		if (h_corr->GetBinCenter(bi) < 1.7)
+			av = h_corr->GetBinContent(bi);
+		else
+			h_corr->SetBinContent(bi, av);
+	}
+
 	h_corr->Write();
 }
 
