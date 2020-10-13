@@ -66,7 +66,7 @@ void Init_base()
 
 	anal.bckg_corr = 1.;
 	
-	anal.L_int = 744.782E3;	// scaled to match with DS2 (equal dsigma/dt integral over "ub" bins 5 to 12)
+	anal.L_int = 744.782E3 * 0.996;	// scaled to match with DS2 (equal dsigma/dt integral over "ub" bins 5 to 12)
 
 	anal.alignment_t0 = 67300;	// beginning of the first time-slice
 	anal.alignment_ts = 10*60.;	// time-slice in s
