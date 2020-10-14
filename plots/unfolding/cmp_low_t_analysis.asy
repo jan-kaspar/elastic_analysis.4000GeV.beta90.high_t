@@ -19,7 +19,7 @@ NewPad("$|t|\ung{GeV^2}$", "multiplicative correction",
 
 for (int dgi : diagonals.keys)
 {
-	AddToLegend(dgn_labels[dgi] + ":");
+	AddToLegend("<" + dgn_labels[dgi] + ":");
 
 	string f_old = topDir_old + dataset + "/unfolding_"+diagonals[dgi]+".root";
 	//string ff = topDir_old + dataset + "/unfolding_fit_"+diagonals[dgi]+".root";

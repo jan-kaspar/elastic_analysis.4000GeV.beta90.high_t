@@ -8,12 +8,13 @@ string o = "NPB/DS4-sc/combined/h_dsdt";
 RootObject hist = RootGetObject(f, o);
 
 xSizeDef = 8cm;
+xTicksDef = LeftTicks(0.05, 0.01);
 
 //----------------------------------------------------------------------------------------------------
 
 void DrawPoint(real x_left, real x_right, real y, real y_unc)
 {
-	pen p = blue;
+	pen p = heavygreen;
 	
 	real x = (x_left + x_right)/2.;
 
@@ -60,5 +61,7 @@ DrawPoint(0.16340, 0.17194,  20.645, 0.0616);
 DrawPoint(0.17194, 0.18082,  17.486, 0.0574);
 DrawPoint(0.18082, 0.19005,  14.679, 0.0543);
 DrawPoint(0.19005, 0.19965,  12.291, 0.0504);
+
+limits((0, 0.999), (0.20, 1.001), Crop);
 
 AttachLegend();

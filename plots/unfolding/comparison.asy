@@ -82,9 +82,6 @@ for (int dgni : diagonals.keys)
 
 GShipout("comparison_CF", margin=1mm);
 
-// TODO
-exit();
-
 NewPlot("validation of the NI calculation (wrt. MC calculation)");
 draw(RootGetObject(topDir + "DS4/unfolding_cf_45b_56t.root", "bt1/exp3-intf-exp1/+0,+0/iteration 1/g_corr"), "l", black, "NI: graph");
 draw(RootGetObject(topDir + "DS4/unfolding_cf_45b_56t.root", "bt1/exp3-intf-exp1/+0,+0/iteration 1/corr"), "vl", black, "NI: histogram");
@@ -104,6 +101,8 @@ draw(RootGetObject(topDir + "DS4/unfolding_gr_45t_56b.root", "bt1/smearing_matri
 draw(RootGetObject(topDir + "DS4/unfolding_gr_45t_56b.root", "bt1/smearing_matrix_mc_45t_56b.root,exp3-intf-exp1,bt1/alpha=1.00E+00/h_corr"), "vl", black+1pt, "$\al = 1\cdot10^{0}$");
 FinalizePlot();
 
+NewRow();
+
 NewPlot("diagonal and binning comparison");
 AddToLegend("<45b -- 56t");
 draw(RootGetObject(topDir + "DS4/unfolding_gr_45b_56t.root", "ob-1-30-0.10/smearing_matrix_mc_45b_56t.root,exp3-intf-exp1,ob-1-30-0.10/alpha=1.00E+00/h_corr"), "vl", black, "ob-1-30-0.10, $\al = 1$");
@@ -119,6 +118,8 @@ NewPlot("uncertainty estimate");
 draw(RootGetObject(topDir + "DS4/unfolding_gr_45b_56t.root", "bt1/smearing_matrix_mc_45b_56t.root,exp3-intf-exp1,bt1/alpha=1.00E-03/h_corr"), "vl,eb", black, "45 bot -- 56 top, bt1");
 FinalizePlot();
 */
+
+NewRow();
 
 NewPlot("model and binning comparison");
 AddToLegend("<exp3-intf-exp1");
