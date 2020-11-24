@@ -56,32 +56,56 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, bool save=true)
 
 	if (model == "local")
 	{
-		unique_ptr<TF1> ff2(new TF1("ff2", "[0] + [1] * pow(x - [2], 2)"));
-		ff2->SetParameters(0.0147, 1., 0.523);
-		ff2->SetRange(0.47, 0.57);
-		h_dsdt->Fit(ff2.get(), "RQ", "");
-		if (save)
-			ff2->Write("f_dip");
+		{
+			double x_min = 0.47, x_max = 0.555;
 
-		r.t_dip = ff2->GetParameter(2);
-		r.t_dip_unc = ff2->GetParError(2);
-		r.dsdt_dip = ff2->GetParameter(0);
-		r.dsdt_dip_unc = ff2->GetParError(0);
+			int idx_min = h_dsdt->FindBin(x_min);
+			int idx_max = h_dsdt->FindBin(x_max);
 
-		unique_ptr<TF1> ff3(new TF1("ff3", "[0] + [1] * pow(x - [2], 2)"));
-		ff3->SetParameters(0.0295, -1., 0.69);
-		ff3->SetRange(0.57, 0.85);
-		h_dsdt->Fit(ff3.get(), "RQ", "");
-		if (save)
-			ff3->Write("f_bump");
+			double x_min_edge = h_dsdt->GetBinLowEdge(idx_min);
+			double x_max_edge = h_dsdt->GetBinLowEdge(idx_max) + h_dsdt->GetBinWidth(idx_max);
 
-		r.t_bmp = ff3->GetParameter(2);
-		r.t_bmp_unc = ff3->GetParError(2);
-		r.dsdt_bmp = ff3->GetParameter(0);
-		r.dsdt_bmp_unc = ff3->GetParError(0);
+			unique_ptr<TF1> ff2(new TF1("ff2", "[0] + [1] * pow(x - [2], 2)"));
+			ff2->SetParameters(0.0147, 1., 0.523);
+			ff2->SetRange(x_min_edge, x_max_edge);
 
-		r.R = r.dsdt_bmp / r.dsdt_dip;
-		r.R_unc = r.R * sqrt(pow(r.dsdt_dip_unc / r.dsdt_dip, 2.) + pow(r.dsdt_bmp_unc / r.dsdt_bmp, 2.));
+			h_dsdt->Fit(ff2.get(), "RQ", "");
+
+			if (save)
+				ff2->Write("f_dip");
+
+			r.t_dip = ff2->GetParameter(2);
+			r.t_dip_unc = ff2->GetParError(2);
+			r.dsdt_dip = ff2->GetParameter(0);
+			r.dsdt_dip_unc = ff2->GetParError(0);
+		}
+
+		{
+			double x_min = 0.57, x_max = 0.85;
+
+			int idx_min = h_dsdt->FindBin(x_min);
+			int idx_max = h_dsdt->FindBin(x_max);
+
+			double x_min_edge = h_dsdt->GetBinLowEdge(idx_min);
+			double x_max_edge = h_dsdt->GetBinLowEdge(idx_max) + h_dsdt->GetBinWidth(idx_max);
+
+			unique_ptr<TF1> ff3(new TF1("ff3", "[0] + [1] * pow(x - [2], 2)"));
+			ff3->SetParameters(0.0295, -1., 0.69);
+			ff3->SetRange(x_min_edge, x_max_edge);
+
+			h_dsdt->Fit(ff3.get(), "RQ", "");
+
+			if (save)
+				ff3->Write("f_bump");
+
+			r.t_bmp = ff3->GetParameter(2);
+			r.t_bmp_unc = ff3->GetParError(2);
+			r.dsdt_bmp = ff3->GetParameter(0);
+			r.dsdt_bmp_unc = ff3->GetParError(0);
+
+			r.R = r.dsdt_bmp / r.dsdt_dip;
+			r.R_unc = r.R * sqrt(pow(r.dsdt_dip_unc / r.dsdt_dip, 2.) + pow(r.dsdt_bmp_unc / r.dsdt_bmp, 2.));
+		}
 
 		return r;
 	}
