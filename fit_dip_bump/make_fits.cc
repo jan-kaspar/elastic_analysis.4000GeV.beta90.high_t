@@ -568,15 +568,15 @@ int main()
 
 		// print summary
 		printf("* summary:\n");
-		printf("  t_dip    = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
+		printf("  t_dip    = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
 			r_central.t_dip, r_central_unc.t_dip_unc, r_syst_unc.t_dip_unc, r_fit_range_unc.t_dip_unc);
-		printf("  dsdt_dip = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
+		printf("  dsdt_dip = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
 			r_central.dsdt_dip, r_central_unc.dsdt_dip_unc, r_syst_unc.dsdt_dip_unc, r_fit_range_unc.dsdt_dip_unc);
-		printf("  t_bmp    = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
+		printf("  t_bmp    = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
 			r_central.t_bmp, r_central_unc.t_bmp_unc, r_syst_unc.t_bmp_unc, r_fit_range_unc.t_bmp_unc);
-		printf("  dsdt_bmp = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
+		printf("  dsdt_bmp = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
 			r_central.dsdt_bmp, r_central_unc.dsdt_bmp_unc, r_syst_unc.dsdt_bmp_unc, r_fit_range_unc.dsdt_bmp_unc);
-		printf("  R        = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
+		printf("  R        = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
 			r_central.R, r_central_unc.R_unc, r_syst_unc.R_unc, r_fit_range_unc.R_unc);
 	}
 
