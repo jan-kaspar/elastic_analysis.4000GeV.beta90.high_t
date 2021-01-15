@@ -3,8 +3,12 @@
 #include "TF1.h"
 #include "TGraph.h"
 #include "TMath.h"
-
 #include <TDirectory.h>
+#include <TFitResultPtr.h>
+#include <TRandom3.h>
+#include "TMatrixDSymEigen.h"
+#include "TFitResult.h"
+
 #include <cstdio>
 #include <memory>
 #include <vector>
@@ -42,6 +46,8 @@ struct FitResults
 	double t_bmp=0., t_bmp_unc=0.;
 	double dsdt_bmp=0., dsdt_bmp_unc=0.;
 	double R=0., R_unc=0.;
+
+	bool valid = true;
 
 	void Print() const
 	{
@@ -148,14 +154,27 @@ vector<RangeData> GetRanges(const std::string &model)
 			}
 	}
 
+	if (list.empty())
+		printf("ERROR in GetRanges: model `%s` not known.\n", model.c_str());
+
 	return list;
 }
 
 //----------------------------------------------------------------------------------------------------
 
-FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> &rangeData, bool save=true)
+struct FitData
 {
-	FitResults r;
+	shared_ptr<TF1> ff;
+	TFitResultPtr fr;
+};
+
+//----------------------------------------------------------------------------------------------------
+
+vector<FitData> MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> &rangeData)
+{
+	const bool save = true;
+
+	vector<FitData> fits;
 
 	if (model == "local")
 	{
@@ -168,15 +187,11 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> 
 			const double x_min_edge = h_dsdt->GetBinLowEdge(idx_min);
 			const double x_max_edge = h_dsdt->GetBinLowEdge(idx_max) + h_dsdt->GetBinWidth(idx_max);
 
-			unique_ptr<TF1> ff2(new TF1("ff2", "[0] + [1] * pow(x - [2], 2)"));
+			shared_ptr<TF1> ff2(new TF1("ff2", "[0] + [1] * pow(x - [2], 2)"));
 			ff2->SetParameters(0.0147, 1., 0.523);
 			ff2->SetRange(x_min_edge, x_max_edge);
 
-			h_dsdt->Fit(ff2.get(), "RQ", "");
-			h_dsdt->Fit(ff2.get(), "RQ", "");
-			h_dsdt->Fit(ff2.get(), "RQ", "");
-			h_dsdt->Fit(ff2.get(), "RQ", "");
-			h_dsdt->Fit(ff2.get(), "RQ", "");
+			TFitResultPtr result = h_dsdt->Fit(ff2.get(), "RQS", "");
 
 			// TODO: remove
 			h_dsdt->Write("hist_with_fit_dip");
@@ -184,10 +199,7 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> 
 			if (save)
 				ff2->Write("f_dip");
 
-			r.t_dip = ff2->GetParameter(2);
-			r.t_dip_unc = ff2->GetParError(2);
-			r.dsdt_dip = ff2->GetParameter(0);
-			r.dsdt_dip_unc = ff2->GetParError(0);
+			fits.push_back({ff2, result});
 		}
 
 		{
@@ -199,11 +211,11 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> 
 			const double x_min_edge = h_dsdt->GetBinLowEdge(idx_min);
 			const double x_max_edge = h_dsdt->GetBinLowEdge(idx_max) + h_dsdt->GetBinWidth(idx_max);
 
-			unique_ptr<TF1> ff3(new TF1("ff3", "[0] + [1] * pow(x - [2], 2)"));
+			shared_ptr<TF1> ff3(new TF1("ff3", "[0] + [1] * pow(x - [2], 2)"));
 			ff3->SetParameters(0.0295, -1., 0.69);
 			ff3->SetRange(x_min_edge, x_max_edge);
 
-			h_dsdt->Fit(ff3.get(), "RQ", "");
+			TFitResultPtr result = h_dsdt->Fit(ff3.get(), "RQS", "");
 
 			// TODO: remove
 			h_dsdt->Write("hist_with_fit_bmp");
@@ -211,16 +223,10 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> 
 			if (save)
 				ff3->Write("f_bump");
 
-			r.t_bmp = ff3->GetParameter(2);
-			r.t_bmp_unc = ff3->GetParError(2);
-			r.dsdt_bmp = ff3->GetParameter(0);
-			r.dsdt_bmp_unc = ff3->GetParError(0);
-
-			r.R = r.dsdt_bmp / r.dsdt_dip;
-			r.R_unc = r.R * sqrt(pow(r.dsdt_dip_unc / r.dsdt_dip, 2.) + pow(r.dsdt_bmp_unc / r.dsdt_bmp, 2.));
+			fits.push_back({ff3, result});
 		}
 
-		return r;
+		return fits;
 	}
 
 	if (model == "exp2+exp3")
@@ -233,11 +239,11 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> 
 		double x_min_edge = h_dsdt->GetBinLowEdge(idx_min);
 		double x_max_edge = h_dsdt->GetBinLowEdge(idx_max) + h_dsdt->GetBinWidth(idx_max);
 
-		unique_ptr<TF1> ff(new TF1("ff", "[0] * exp([1]*(x-0.4) + [2]*(x-0.4)*(x-0.4)) + [3]*exp([4]*(x-0.7) + [5]*(x-0.7)*(x-0.7) + [6]*(x-0.7)*(x-0.7)*(x-0.7))"));
+		shared_ptr<TF1> ff(new TF1("ff", "[0] * exp([1]*(x-0.4) + [2]*(x-0.4)*(x-0.4)) + [3]*exp([4]*(x-0.7) + [5]*(x-0.7)*(x-0.7) + [6]*(x-0.7)*(x-0.7)*(x-0.7))"));
 		ff->SetParameters(0.144, -26.2, -31.2, 0.03, 0., -19.5, 39.7);
 		ff->SetRange(x_min_edge, x_max_edge);
 
-		h_dsdt->Fit(ff.get(), "RQ", "");
+		TFitResultPtr result = h_dsdt->Fit(ff.get(), "RQS", "");
 
 		// TODO: remove
 		h_dsdt->Write("hist_with_fit");
@@ -245,7 +251,52 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> 
 		if (save)
 			ff->Write("f_global");
 
-		// TODO: add uncertainties
+		fits.push_back({ff, result});
+
+		return fits;
+	}
+
+	printf("ERROR in MakeFit: model `%s` not known.\n", model.c_str());
+
+	return fits;
+}
+
+//----------------------------------------------------------------------------------------------------
+
+FitResults AnalyzeFit(const vector<FitData> &fits, const std::string &model)
+{
+	//printf("* AnalyzeFit\n");
+
+	FitResults r;
+
+	if (model == "local")
+	{
+		const auto f_dip = fits[0].ff;
+		const auto f_bmp = fits[1].ff;
+
+		r.t_dip = f_dip->GetParameter(2);
+		r.t_dip_unc = f_dip->GetParError(2);
+		r.dsdt_dip = f_dip->GetParameter(0);
+		r.dsdt_dip_unc = f_dip->GetParError(0);
+
+		r.t_bmp = f_bmp->GetParameter(2);
+		r.t_bmp_unc = f_bmp->GetParError(2);
+		r.dsdt_bmp = f_bmp->GetParameter(0);
+		r.dsdt_bmp_unc = f_bmp->GetParError(0);
+
+		r.R = r.dsdt_bmp / r.dsdt_dip;
+		r.R_unc = r.R * sqrt(pow(r.dsdt_dip_unc / r.dsdt_dip, 2.) + pow(r.dsdt_bmp_unc / r.dsdt_bmp, 2.));
+
+		return r;
+	}
+
+	if (model == "exp2+exp3")
+	{
+		const auto ff = fits[0].ff;
+
+		// TODO:
+		//for (int pi = 0; pi < ff->GetNpar(); ++pi)
+		//	printf(" - pi = %u: par = %.2E\n", pi, ff->GetParameter(pi));
 
 		FindMinimum(ff.get(), 0.49, 0.56, r.t_dip, r.dsdt_dip);
 		r.t_dip_unc = 0.;
@@ -258,10 +309,128 @@ FitResults MakeFit(TH1D *h_dsdt, const std::string &model, const vector<double> 
 		r.R = r.dsdt_bmp / r.dsdt_dip;
 		r.R_unc = 0.;
 
+		if (fabs(r.dsdt_bmp - 0.03) > 0.02)
+			r.valid = false;
+
 		return r;
 	}
 
-	printf("ERROR in MakeFit: model `%s` not known.\n", model.c_str());
+	printf("ERROR in AnalyzeFit: model `%s` not known.\n", model.c_str());
+
+	return r;
+}
+
+//----------------------------------------------------------------------------------------------------
+
+void GeneratePerturbation(const vector<FitData> &input, const vector<shared_ptr<TMatrixD>> &genMat, vector<FitData> &output,
+	vector<shared_ptr<Stat>> &stats)
+{
+	//printf("* GeneratePerturbation\n");
+
+	for (unsigned int fi = 0; fi < input.size(); ++fi)
+	{
+		//printf("  - fi = %u\n", fi);
+
+		const TF1 *f_input = input[fi].ff.get();
+		const TMatrixD &m_gen = * genMat[fi].get();
+		TF1 *f_output = output[fi].ff.get();
+		const auto st = stats[fi];
+
+		TVectorD delta(m_gen.GetNrows()), rdm(m_gen.GetNrows());
+		for (int i = 0; i < m_gen.GetNrows(); i++)
+			rdm(i) = gRandom->Gaus();
+		delta = m_gen * rdm;
+
+		TVectorD params_new(m_gen.GetNrows());
+
+		for (int pi = 0; pi < m_gen.GetNrows(); ++pi)
+		{
+			f_output->SetParameter(pi, f_input->GetParameter(pi) + delta(pi));
+
+			params_new(pi) = f_output->GetParameter(pi);
+
+			//printf("    - pi = %u: input = %.2E, delta = %.2E, output = %.2E\n", pi, f_input->GetParameter(pi), delta(pi), f_output->GetParameter(pi));
+		}
+
+		st->Fill(params_new);
+	}
+}
+
+//----------------------------------------------------------------------------------------------------
+
+FitResults AnalyzeFitUncertainty(const vector<FitData> &fits, const std::string &model)
+{
+	//printf("* AnalyzeFitUncertainty\n");
+
+	// prepare perturbation generation
+	vector<FitData> fits_perturbed;
+	vector<shared_ptr<TMatrixD>> m_gens;
+	vector<shared_ptr<Stat>> stats;
+
+	for (const auto fd : fits)
+	{
+		const TF1 *ff = fd.ff.get(); 
+		shared_ptr<TF1> nf(new TF1(* ff));
+		TFitResultPtr fake_ptr;
+		fits_perturbed.push_back({nf, fake_ptr});
+
+		const auto &V = fd.fr->GetCovarianceMatrix();
+
+		TMatrixDSymEigen eig_decomp(V);
+		TVectorD eig_values(eig_decomp.GetEigenValues());
+		TMatrixDSym S(V.GetNrows());
+		for (int i = 0; i < V.GetNrows(); i++)
+			S(i, i) = (eig_values(i) >= 0.) ? sqrt(eig_values(i)) : 0.;
+
+		m_gens.push_back(make_shared<TMatrixD>(eig_decomp.GetEigenVectors() * S));
+
+		stats.push_back(make_shared<Stat>(V.GetNrows()));
+	}
+
+	// evaluate random perturbations
+	Stat st(5);
+
+	for (unsigned int ev = 0; ev < 10000; ++ev)
+	{
+		GeneratePerturbation(fits, m_gens, fits_perturbed, stats);
+
+		const FitResults &r_per = AnalyzeFit(fits_perturbed, model);
+
+		if (!r_per.valid)
+			continue;
+
+		st.Fill(
+			r_per.t_dip,
+			r_per.dsdt_dip,
+			r_per.t_bmp,
+			r_per.dsdt_bmp,
+			r_per.R);
+	}
+
+	// print stats
+	/*
+	for (unsigned int fi = 0; fi < fits.size(); ++fi)
+	{
+		printf(" - fi = %u\n", fi);
+
+		const auto *ff = fits[fi].ff.get();
+
+		for (int pi = 0; pi < ff->GetNpar(); ++pi)
+		{
+			printf("    - pi = %u: mean = %.3E, unc = %.3E\n", pi, ff->GetParameter(pi), ff->GetParError(pi));
+		}
+
+		stats[fi]->PrintMeanAndStdDev();
+	}
+	*/
+
+	// build output
+	FitResults r;
+	r.t_dip_unc = st.GetStdDev(0);
+	r.dsdt_dip_unc = st.GetStdDev(1);
+	r.t_bmp_unc = st.GetStdDev(2);
+	r.dsdt_bmp_unc = st.GetStdDev(3);
+	r.R_unc = st.GetStdDev(4);
 
 	return r;
 }
@@ -321,9 +490,15 @@ int main()
 
 		// central fit
 		gDirectory = d_model->mkdir("central");
-		FitResults r_central = MakeFit(h_dsdt, model, range_central);
+		const auto &fits_central = MakeFit(h_dsdt, model, range_central);
+		FitResults r_central = AnalyzeFit(fits_central, model);
 		printf("* central fit:\n");
 		r_central.Print();
+
+		// central fit uncertainty
+		FitResults r_central_unc = AnalyzeFitUncertainty(fits_central, model);
+		printf("* central fit uncertainty:\n");
+		r_central_unc.Print();
 
 		// systematics
 		TDirectory *d_systematics = d_model->mkdir("systematics");
@@ -336,7 +511,7 @@ int main()
 			auto h_dsdt_mod = ApplySystematicMode(h_dsdt, syst_mode.second);
 			h_dsdt_mod->Write("h_dsdt_mod");
 
-			FitResults r_syst = MakeFit(h_dsdt_mod.get(), model, range_central);
+			FitResults r_syst = AnalyzeFit(MakeFit(h_dsdt_mod.get(), model, range_central), model);
 
 			vsum[0] += pow(r_syst.t_dip - r_central.t_dip, 2);
 			vsum[1] += pow(r_syst.dsdt_dip - r_central.dsdt_dip, 2);
@@ -362,12 +537,9 @@ int main()
 
 		for (const auto &range : ranges)
 		{
-			// TODO: remove
-			//printf("------- range: %s\n", range.label.c_str());
-
 			gDirectory = d_fit_range->mkdir(range.label.c_str());
 
-			FitResults r_range = MakeFit(h_dsdt, model, range.data);
+			FitResults r_range = AnalyzeFit(MakeFit(h_dsdt, model, range.data), model);
 
 			if (!range.enabled)
 			{
@@ -375,9 +547,6 @@ int main()
 				dummy->Write("disabled");
 				continue;
 			}
-
-			// TODO: remove
-			//printf("  dsdt_bmp = %.3f\n", r_range.dsdt_bmp);
 
 			st.Fill(
 				r_range.t_dip - r_central.t_dip,
@@ -400,15 +569,15 @@ int main()
 		// print summary
 		printf("* summary:\n");
 		printf("  t_dip    = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
-			r_central.t_dip, r_central.t_dip_unc, r_syst_unc.t_dip_unc, r_fit_range_unc.t_dip_unc);
+			r_central.t_dip, r_central_unc.t_dip_unc, r_syst_unc.t_dip_unc, r_fit_range_unc.t_dip_unc);
 		printf("  dsdt_dip = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
-			r_central.dsdt_dip, r_central.dsdt_dip_unc, r_syst_unc.dsdt_dip_unc, r_fit_range_unc.dsdt_dip_unc);
+			r_central.dsdt_dip, r_central_unc.dsdt_dip_unc, r_syst_unc.dsdt_dip_unc, r_fit_range_unc.dsdt_dip_unc);
 		printf("  t_bmp    = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
-			r_central.t_bmp, r_central.t_bmp_unc, r_syst_unc.t_bmp_unc, r_fit_range_unc.t_bmp_unc);
+			r_central.t_bmp, r_central_unc.t_bmp_unc, r_syst_unc.t_bmp_unc, r_fit_range_unc.t_bmp_unc);
 		printf("  dsdt_bmp = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
-			r_central.dsdt_bmp, r_central.dsdt_bmp_unc, r_syst_unc.dsdt_bmp_unc, r_fit_range_unc.dsdt_bmp_unc);
+			r_central.dsdt_bmp, r_central_unc.dsdt_bmp_unc, r_syst_unc.dsdt_bmp_unc, r_fit_range_unc.dsdt_bmp_unc);
 		printf("  R        = %.4f +- %.4f (stat) +- %.4f (syst) +- %.4f (fit range)\n",
-			r_central.R, r_central.R_unc, r_syst_unc.R_unc, r_fit_range_unc.R_unc);
+			r_central.R, r_central_unc.R_unc, r_syst_unc.R_unc, r_fit_range_unc.R_unc);
 	}
 
 	// clean up
