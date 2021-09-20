@@ -437,6 +437,72 @@ FitResults AnalyzeFitUncertainty(const vector<FitData> &fits, const std::string 
 
 //----------------------------------------------------------------------------------------------------
 
+double Combine(vector<double> inputs)
+{
+	double s2 = 0.;
+	for (const auto &i : inputs)
+		s2 += i*i;
+
+	return sqrt(s2);
+}
+
+//----------------------------------------------------------------------------------------------------
+
+FitResults Combine(vector<FitResults> inputs)
+{
+	FitResults r;
+
+	for (const auto &i : inputs)
+	{
+		r.t_dip_unc += pow(i.t_dip_unc, 2);
+		r.dsdt_dip_unc += pow(i.dsdt_dip_unc, 2);
+		r.t_bmp_unc += pow(i.t_bmp_unc, 2);
+		r.dsdt_bmp_unc += pow(i.dsdt_bmp_unc, 2);
+		r.R_unc += pow(i.R_unc, 2);
+	}
+
+	r.t_dip_unc = sqrt(r.t_dip_unc);
+	r.dsdt_dip_unc = sqrt(r.dsdt_dip_unc);
+	r.t_bmp_unc = sqrt(r.t_bmp_unc);
+	r.dsdt_bmp_unc = sqrt(r.dsdt_bmp_unc);
+	r.R_unc = sqrt(r.R_unc);
+
+	return r;
+}
+
+//----------------------------------------------------------------------------------------------------
+
+string ToString(double val, const char *fmt)
+{
+	char buf[100];
+	sprintf(buf, fmt, val);
+	return buf;
+}
+
+//----------------------------------------------------------------------------------------------------
+
+void FillColumnVal(vector<vector<string>> &cells, unsigned int col, const FitResults &r)
+{
+	cells[0][col] = ToString(r.t_dip, "%.3f");
+	cells[1][col] = ToString(r.dsdt_dip * 1E3, "%.1f");
+	cells[2][col] = ToString(r.t_bmp, "%.3f");
+	cells[3][col] = ToString(r.dsdt_bmp *1E3, "%.1f");
+	cells[4][col] = ToString(r.R, "%.2f");
+}
+
+//----------------------------------------------------------------------------------------------------
+
+void FillColumnUnc(vector<vector<string>> &cells, unsigned int col, const FitResults &r)
+{
+	cells[0][col] = ToString(r.t_dip_unc, "%.3f");
+	cells[1][col] = ToString(r.dsdt_dip_unc * 1E3, "%.1f");
+	cells[2][col] = ToString(r.t_bmp_unc, "%.3f");
+	cells[3][col] = ToString(r.dsdt_bmp_unc *1E3, "%.1f");
+	cells[4][col] = ToString(r.R_unc, "%.2f");
+}
+
+//----------------------------------------------------------------------------------------------------
+
 int main()
 {
 	// settings
@@ -477,6 +543,9 @@ int main()
 
 	h_dsdt->Write("h_dsdt");
 
+	// book datastruture for the LaTeX table
+	vector<vector<string>> cells(5, vector<string>(7));
+
 	// make fits for all models
 	for (const auto &model : models)
 	{
@@ -496,9 +565,9 @@ int main()
 		r_central.Print();
 
 		// central fit uncertainty
-		FitResults r_central_unc = AnalyzeFitUncertainty(fits_central, model);
+		FitResults r_stat_unc = AnalyzeFitUncertainty(fits_central, model);
 		printf("* central fit uncertainty:\n");
-		r_central_unc.Print();
+		r_stat_unc.Print();
 
 		// systematics
 		TDirectory *d_systematics = d_model->mkdir("systematics");
@@ -569,15 +638,66 @@ int main()
 		// print summary
 		printf("* summary:\n");
 		printf("  t_dip    = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
-			r_central.t_dip, r_central_unc.t_dip_unc, r_syst_unc.t_dip_unc, r_fit_range_unc.t_dip_unc);
+			r_central.t_dip, r_stat_unc.t_dip_unc, r_syst_unc.t_dip_unc, r_fit_range_unc.t_dip_unc);
 		printf("  dsdt_dip = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
-			r_central.dsdt_dip, r_central_unc.dsdt_dip_unc, r_syst_unc.dsdt_dip_unc, r_fit_range_unc.dsdt_dip_unc);
+			r_central.dsdt_dip, r_stat_unc.dsdt_dip_unc, r_syst_unc.dsdt_dip_unc, r_fit_range_unc.dsdt_dip_unc);
 		printf("  t_bmp    = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
-			r_central.t_bmp, r_central_unc.t_bmp_unc, r_syst_unc.t_bmp_unc, r_fit_range_unc.t_bmp_unc);
+			r_central.t_bmp, r_stat_unc.t_bmp_unc, r_syst_unc.t_bmp_unc, r_fit_range_unc.t_bmp_unc);
 		printf("  dsdt_bmp = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
-			r_central.dsdt_bmp, r_central_unc.dsdt_bmp_unc, r_syst_unc.dsdt_bmp_unc, r_fit_range_unc.dsdt_bmp_unc);
+			r_central.dsdt_bmp, r_stat_unc.dsdt_bmp_unc, r_syst_unc.dsdt_bmp_unc, r_fit_range_unc.dsdt_bmp_unc);
 		printf("  R        = %.4f \\pm %.4f^{stat} \\pm %.4f^{syst} \\pm %.4f^{range}\n",
-			r_central.R, r_central_unc.R_unc, r_syst_unc.R_unc, r_fit_range_unc.R_unc);
+			r_central.R, r_stat_unc.R_unc, r_syst_unc.R_unc, r_fit_range_unc.R_unc);
+
+		printf("* summary combined:\n");
+		printf("  t_dip    = %.4f \\pm %.4f\n",
+			r_central.t_dip, Combine({r_stat_unc.t_dip_unc, r_syst_unc.t_dip_unc, r_fit_range_unc.t_dip_unc}));
+		printf("  dsdt_dip = %.4f \\pm %.4f\n",
+			r_central.dsdt_dip, Combine({r_stat_unc.dsdt_dip_unc, r_syst_unc.dsdt_dip_unc, r_fit_range_unc.dsdt_dip_unc}));
+		printf("  t_bmp    = %.4f \\pm %.4f\n",
+			r_central.t_bmp, Combine({r_stat_unc.t_bmp_unc, r_syst_unc.t_bmp_unc, r_fit_range_unc.t_bmp_unc}));
+		printf("  dsdt_bmp = %.4f \\pm %.4f\n",
+			r_central.dsdt_bmp, Combine({r_stat_unc.dsdt_bmp_unc, r_syst_unc.dsdt_bmp_unc, r_fit_range_unc.dsdt_bmp_unc}));
+		printf("  R        = %.4f \\pm %.4f\n",
+			r_central.R, Combine({r_stat_unc.R_unc, r_syst_unc.R_unc, r_fit_range_unc.R_unc}));
+
+		// fill in LaTeX table cells
+		if (model == "local")
+		{
+			// define extra uncertainty
+			FitResults r_extra_unc;
+			r_extra_unc.t_dip_unc = 0.;
+			r_extra_unc.dsdt_dip_unc = 0.0016;
+			r_extra_unc.t_bmp_unc = 0.0174;
+			r_extra_unc.dsdt_bmp_unc = 0.;
+			r_extra_unc.R_unc = r_central.R * r_extra_unc.dsdt_dip_unc / r_central.dsdt_dip;
+
+			// total systematics = systematics + extra
+			//FitResults r_syst_unc_tot = Combine({r_syst_unc, r_extra_unc});
+
+			// total uncertainty = stat + total systematics + range
+			FitResults r_unc_tot = Combine({r_stat_unc, r_syst_unc, r_extra_unc, r_fit_range_unc});
+
+			FillColumnVal(cells, 0, r_central);
+			FillColumnUnc(cells, 1, r_stat_unc);
+			FillColumnUnc(cells, 2, r_syst_unc);
+			FillColumnUnc(cells, 3, r_fit_range_unc);
+			FillColumnUnc(cells, 4, r_extra_unc);
+			FillColumnUnc(cells, 5, r_unc_tot);
+		}
+
+		if (model == "exp2+exp3")
+		{
+			FillColumnVal(cells, 6, r_central);
+		}
+	}
+
+	// print LaTeX table
+	printf("--------------------\n");
+	for (const auto &row : cells)
+	{
+		for (const auto &c : row)
+			printf(" & %12s", c.c_str());
+		printf("\\cr\n");
 	}
 
 	// clean up
