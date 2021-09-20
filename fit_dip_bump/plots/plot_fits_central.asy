@@ -34,8 +34,9 @@ for (int mi : models.keys)
 		l += format(", $\ch^2/ndf = %#.2f", fit.rExec("GetChisquare")) + format(" / %i", fit.iExec("GetNDF"))
 			+ format(" = %#.2f$", fit.rExec("GetChisquare") / fit.iExec("GetNDF"));
 
-
 		draw(fit, "l", p, l);
+
+		AddToLegend(format("from: %.2f", fit.rExec("GetXmin")) + format(" to: %.2f", fit.rExec("GetXmax")));
 	}
 
 	limits((0.40, 0.008), (1.1, 0.20), Crop);
