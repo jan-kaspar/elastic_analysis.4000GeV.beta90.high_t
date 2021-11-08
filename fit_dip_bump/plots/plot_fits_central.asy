@@ -39,7 +39,7 @@ for (int mi : models.keys)
 		AddToLegend(format("from: %.2f", fit.rExec("GetXmin")) + format(" to: %.2f", fit.rExec("GetXmax")));
 	}
 
-	limits((0.40, 0.008), (1.1, 0.20), Crop);
+	limits((0.40, 0.004), (1.2, 0.20), Crop);
 
 	AttachLegend(model);
 }

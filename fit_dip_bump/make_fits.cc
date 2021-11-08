@@ -139,9 +139,8 @@ vector<RangeData> GetRanges(const std::string &model)
 
 	if (model == "exp2+exp3")
 	{
-		//const vector<double> min = { 0.35, 0.33, 0.36 };
 		const vector<double> min = { 0.42, 0.41, 0.43 };
-		const vector<double> max = { 1.00, 0.90, 1.20 };
+		const vector<double> max = { 1.05, 0.98, 1.20 };
 
 		for (unsigned int mi = 0; mi < 3; ++mi)
 			for (unsigned int ma = 0; ma < 3; ++ma)
@@ -244,9 +243,6 @@ vector<FitData> MakeFit(TH1D *h_dsdt, const std::string &model, const vector<dou
 		ff->SetRange(x_min_edge, x_max_edge);
 
 		TFitResultPtr result = h_dsdt->Fit(ff.get(), "RQS", "");
-
-		// TODO: remove
-		h_dsdt->Write("hist_with_fit");
 
 		if (save)
 			ff->Write("f_global");
@@ -513,7 +509,7 @@ int main()
 
 	// get input
 	TFile *f_in = TFile::Open("../DS-merged/merged.root");
-	TH1D *h_dsdt = (TH1D *) f_in->Get("bt1/DS4-sc/combined/h_dsdt");
+	TH1D *h_dsdt = (TH1D *) f_in->Get("bt2/DS4-sc/combined/h_dsdt");
 
 	// load systematics
 	const vector<string> syst_mode_names = {
@@ -666,8 +662,8 @@ int main()
 			// define extra uncertainty
 			FitResults r_extra_unc;
 			r_extra_unc.t_dip_unc = 0.;
-			r_extra_unc.dsdt_dip_unc = 0.0016;
-			r_extra_unc.t_bmp_unc = 0.0174;
+			r_extra_unc.dsdt_dip_unc = 0.0020;
+			r_extra_unc.t_bmp_unc = 0.005;
 			r_extra_unc.dsdt_bmp_unc = 0.;
 			r_extra_unc.R_unc = r_central.R * r_extra_unc.dsdt_dip_unc / r_central.dsdt_dip;
 
